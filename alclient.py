@@ -11,6 +11,7 @@
 10. make sure uinstall is installed in the ARBD
 11.assuming wut won't get any value other than r ,e or x; make sure of this in GUI linking
 yoyo 
+yoyo2
 '''
 import os
 import paramiko, getpass, re, time
