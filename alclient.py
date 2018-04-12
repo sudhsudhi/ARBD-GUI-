@@ -10,6 +10,7 @@
 9.done.txt and testcase.py files are buffer in arbd
 10. make sure uinstall is installed in the ARBD
 11.assuming wut won't get any value other than r ,e or x; make sure of this in GUI linking
+yoyo 
 '''
 import os
 import paramiko, getpass, re, time
