@@ -1,5 +1,5 @@
 import os,signal
-
+ 
 import sys
 import time
 import subprocess
@@ -16,18 +16,22 @@ def server(host,port,pwd):
 	c,addr=s.accept()
 	print 'connected...'
 	
-	wut=c.recv(1024)
-	c.send('recieved wut')
+	wut='p'
 	while str(wut)!='x':
+		wut=c.recv(1024)
+		
+		c.send('received wut:'+wut)
+	
 		if str(wut)=='r':
+			
 			recordserver(s,c)
 			print 'recording'
 		elif str(wut)=='e':
 			exeserver(s,c)
 			print 'executing'
-		wut=c.recv(1024)
-		c.send('recieved wut')
-	s.close()	#close the socket, keep this at the last, or at the end of the loop
+	if wut == 'x':
+	
+		s.close()	#close the socket, keep this at the last, or at the end of the loop
 
 def follow(thefile):
 	#keeps producing an infinitely long generator wrt time
@@ -85,75 +89,80 @@ def recordserver(s,c):
 					break
 		
 def exeserver(s,c):
-		#waits for 2 secs to make sure testcase has been received
-		#grep might interfer with stout.read so don't use grep		
-		
-		cmd1='ls -t /opt/arbd/logs/ | head -1 '
-		#>>!!cmd1='ls -t /home/sudhi/COP/piping| head -1 '
-		p1 = subprocess.Popen(cmd1, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
-				
-		chi=p1.communicate() 
-		
-		llf=str(chi[0][:-1]) #llf=latest log file
-		
-		
-		cmd2='tail -0f /opt/arbd/logs/' + llf   
-		 
-		tc=c.recv(1024) #this line makes sure that testcase has been sent here, tc will be testcase_name
-		time.sleep(2)	#further surety
-		p2 = subprocess.Popen(cmd2, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
-		c.send('recording started')
-		print 'recording started'
-		msg=c.recv(1024) #msg will be 'start execution'
-		
-		
-		cmd3='echo .Book40 | sudo -S python '+'/home/ubuntu/'+str(tc)
-		p3 = subprocess.Popen(cmd3, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
-		print cmd3
-		i=0	
-		
-		#for line in iter(lambda: p3.stderr.readline(),''):
-			#while i<10:
-				#i+=1
-				#print line
-					
-
-		p4=subprocess.Popen('pgrep -af python', stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
-		chi=p4.communicate() 
-		print chi
-
-		c.send('execution of testcase started')		
-		print 'execution started'
-		l=[]
-		lenl=0
-		
-    		for line in iter(lambda: p2.stdout.readline(),''):		#p2.stdout.readline not lines
+	#updated latest UI	
+	l = 0
+	cmd1='ls -t /opt/arbd/logs/ | head -1 '
+	p1 = subprocess.Popen(cmd1, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
+	chi=p1.communicate() # don't write \n
+	llf=str(chi[0][:-1]) #llf=latest log file
+	#print chi[0][:-1]
+	tervar=0
+	cmd2='tail -0f /opt/arbd/logs/' + llf	#should grep be removed? will it interact with stdout? 
+	while tervar==0:
+		pp2 = subprocess.Popen(cmd2, stdin=PIPE, stdout=PIPE, stderr=PIPE,shell=True)
+		#pid = os.getpgid(pp2.pid)
+		recvlist=c.recv(1024)
+		#print recvlist
+		if recvlist=="tervar=1":
+			break
+		rlist = eval(recvlist)
+		print 'rlist: '+str(rlist)		#rlist=[[ln1],[ln2],...], [ln1]= one keyboard event line with many keys(key_A,key_B,etc..)
+		for rkeys in rlist:
 			
-			if ('Keyboard event' in line) or ("BRF data" in line):			
-				msg=c.recv(1024)
+			combo=rkeys[-2]
+			delta=rkeys[-1]
+			combo_list=[]
+			#print combo_list
+			if not ("no_key" in combo):		#if Keyboard_event line was empty			
+				for i in combo:
+					if i!= "Key_not_yet_defined":
+						print 'i:    ' +str(i)
+						exec(i) in globals(), locals()	# i = 'k=uinput.KEY_KN' #globals,locals because exec cannot be used inside a function which calls a subfunction(iter here)
+ 						combo_list.append(k)
+					elif i== "Key_not_yet_defined":
+						print "Recieved a not defined key, neglected it!"
+			Keyboard.emit_combo(combo_list)
+			print "combo_list: "+str(combo_list)
+			#print "Keyboard event executed."
+			time.sleep(delta)
+		obrf=[]
+		sv = 0
+		rov=''
+		#obrf will store all brf lines until all keyboard events has been executed. After all keyboard events has been executed it will store the brf lines that come within 500 ms.
+		for line in iter(lambda: pp2.stdout.readline(),''):
+			
+			if " [display-svc] [debug] BRF data :" in line:
+				obrf.append(line)
+				print 'brf line: '+line
 				
-				if msg=='continue':
-					#print line
-					l.append(line)
-					c.send(line)
-				with open('done.txt','r') as f:
-					k=f.readline()
-					if k=='done':	#this means whole testcaes has been executed
-						msg='stop2'
-				if msg=='stop2':			
-					c.send('Finished executing testcase')
+			elif "Keyboard event" in line and sv!=len(rlist):   #second condition because Keyboard event lines were coming even after sv == len(rlist)
+				sv+=1
+				print "keyboard line:" +line
+				print 'sv:'+str(sv)
+			
+			if rov == 'bits_more':
+					#print "Recording a bit more"
+					#print datetime.datetime.now().time(), nxt.time()
 					
-					break
-				if msg=='stop':			
-					c.send('recording stopped')
-					
-					break
-						
+					if datetime.datetime.now().time() > nxt.time():
+						#print datetime.datetime.now().time() > nxt.time()
+						break
+
+			elif sv == len(rlist):
+					print "All keyboard events recorded" 
+					rov='bits_more'
+					current=datetime.datetime.now()
+					nxt=current+datetime.timedelta(0,0,0,500)
+					#datetime.timedelta([days[, seconds[, microseconds[, milliseconds[, minutes[, hours[, weeks]]]]]]]
+			
+		#subprocess.call(os.killpg(pid, signal.SIGTERM))
 		
-		os.killpg(os.getpgid(p3.pid), signal.SIGTERM) 	 #stops execution			
-		os.killpg(os.getpgid(p2.pid), signal.SIGTERM) 	 #stops recording
-		os.remove("done.txt")
+		pp2.terminate()	
+		print obrf
+		c.send(str(obrf)+'yolo')	#only 2 brf data lines are sent atmost
+		
+
 host= "192.168.7.2"
-port=8522
-password= ".Book40"
+port=9562
+password= "temppwd"
 server(host,port,password)

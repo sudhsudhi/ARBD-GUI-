@@ -11,7 +11,13 @@
 10. make sure uinstall is installed in the ARBD
 11.assuming wut won't get any value other than r ,e or x; make sure of this in GUI linking
 yoyo 
-yoyo2
+'''
+
+'''#for testing errors in a process
+i=10
+		for line in iter(lambda: p1.stderr.readline(),''):
+					print line 
+					i=i-1
 '''
 import os
 import paramiko, getpass, re, time
@@ -23,13 +29,22 @@ import subprocess
 import socket
 from subprocess import Popen,call,PIPE
 from executer6 import ex,ex2,di,timeparse,linker,timedifference
-def recording(self,s,qu,stop_but):
+def recording(self,s,qu,stop_but,rec_error):
+	try:
+		recordp(self,s,qu,stop_but)
+	except Exception as e:
+		k=traceback.format_exc()
+		print 'ayyo'
+		print k
+                rec_error.put(k)
+def recordp(self,s,qu,stop_but):
         #elf.listbox1.insert(END,"sonu")
 	
 	#gives a file of the name testcase_name which has two lists.The first list is parsed one and the second list is unparsed.
 	wut='r'
 	s.send(wut)			#sending wut
 	recv_msg=s.recv(1024)
+	print recv_msg
 	
 	testcase_name=self.finalpath1+"/"+self.Entry.get()+'.txt'
 	
@@ -63,6 +78,7 @@ def recording(self,s,qu,stop_but):
 		#stop_button.py waits for 2 seconds after recieving the stop command to actually send stop to alclient.py
 		#this is necessary as the last few BRF data lines in the log_file after the last keyboard event line is also required.
 		line=s.recv(1024)
+		print 'line;',line
 		testcase.append(str(line))
 		
 		if ('BRF data' in line):
@@ -134,7 +150,7 @@ def recording(self,s,qu,stop_but):
 	
 	#link is the arsed one and testcase is the unparsed.
 
-
+	
 def conn_send(userid,password,Ipaddress,Portnumber,shlf):
 		
 
@@ -176,7 +192,14 @@ def conn_send(userid,password,Ipaddress,Portnumber,shlf):
 		cmd1='python connect.py'
 		p1 = subprocess.Popen(cmd1, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
 		time.sleep(5)
-		
+		i=10
+		'''for line in iter(lambda: p1.stderr.readline(),''):
+				while i>0:
+					print 'lo'
+					print line 
+					i=i-1
+		'''
+	
 		k=0
 		
 		shlf.sock=socket.socket()
@@ -245,6 +268,7 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 				print 'sendlist:'+str(sendlist)
 				sendlist=[]
 				outbrf=s.recv(1024)
+				print outbrf,'<<outbrf'
 				if not outbrf:
 					break
 				ibrf = str(line).split(" [display-svc] [debug] BRF data :")[-1]
@@ -289,7 +313,7 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 				equ1.put((line,'','',''))
 				sendlist.append(line)
 				executed.append(line)
-		print "Test case '" + tc + "' passed!"
+		print "Test case '" + testcase_name + "' passed!"
 	
 	
 #----------------------------------------------------------------------------------------

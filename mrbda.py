@@ -11,6 +11,15 @@ from executer6 import ex,ex2,di,timeparse,linker,timedifference
 abc = None
 #socket can be called by abc
 #take care of wut in record ,execute and disconnect
+#in disconnect make sure the process connect.py in your latop is closed and the created sockets are destroyed.
+'''#for testing errors in a process
+i=10
+		for line in iter(lambda: p1.stderr.readline(),''):
+				while i>0:
+					print line 
+					i=i-1
+'''
+
 class mainclass():
     def __init__(self,master):
         #self.text = tk.StringVar()
@@ -25,7 +34,7 @@ class mainclass():
         #label1.place(relx=0.5,rely=0.4,anchor="center")
         self.button1 = ttk.Button(master, text="Connect", command=lambda:self.port())
         self.button1.grid(row=3,column=1)
-        self.button4 = ttk.Button(master, text="Disconnect", command="",state=DISABLED)	#end nimbal's process at disconnect
+        self.button4 = ttk.Button(master, text="Disconnect", command="")	#end nimbal's process at disconnect
         self.button4.grid(row=3,column=3)
         #self.text.set("connect")
         #self.button1.place(relx=0.5,rely=0.5,anchor="center")
@@ -237,7 +246,7 @@ class mainclass():
 
     def table(self,master):
         style = ttk.Style()
-        #style.configure(".", font=('Helvetica', 8), foreground="white")
+        style.configure(".", font=('Helvetica', 12))
         style.configure("Treeview", foreground='red')
         style.configure("Treeview.Heading", foreground='Black',background="SkyBlue")
         self.tree2 = ttk.Treeview( master, columns=('Main heading', 'heading','sub heading','Testcase','KeyStrokes','Output','Passed'))
@@ -269,7 +278,24 @@ class mainclass():
         botton1.grid(row=1,column=0)
         botton2 = Button(master, text="STOP", command="",height=2,width=15,bg= "Skyblue")
         botton2.grid(row=2,column=0)
-
+        
+        #------------------------------------
+        #style = ttk.Style()
+        #style.configure("Treeview.Heading", font=(None, 10))
+	#self.treeview.insert('',"end",text=p[0],values=(p[1],p[2],"pass"))
+        #self.treeview.insert('',"end",text=p[0],values=(p[1],p[2],"pass"))
+        '''self.treeview.insert('',"end",text='q+w',values=('','',""))
+        self.treeview.insert('',"end",text='e',values=('','',""))
+        self.treeview.insert('',"end",text='r',values=('qwer','qwer',"Passed!"))
+        self.treeview.insert('',"end",text='t',values=('qwert','qwert',"Passed!"))
+        self.treeview.insert('',"end",text='y',values=('','',""))
+        self.treeview.insert('',"end",text=' ',values=('','',""))
+        self.treeview.insert('',"end",text='i',values=('qwerty i','qwerty i',"Passed!"))
+        self.treeview.insert('',"end",text='s',values=('qwerty is','qwerty is',"Passed!"))
+        self.treeview.insert('',"end",text=' ',values=('qwerty is ','qwerty is ',""))
+	self.treeview.insert('',"end",text='l',values=('qwerty is l','qwerty is ',"Fail!"))
+	mesgbox =   tkMessageBox.askyesno("Error","BRF data didn't match! Continue execution or stop?",parent=self.root4)
+	'''
 
 
 #----------------------------------------------
@@ -286,7 +312,7 @@ class Record_Testcases:
         self.button7.grid(row=2,column=1)
         self.button8 = Button(master, text="Start Recording", command=lambda:self.recording1(),height=1,state=DISABLED)
         self.button8.grid(row=2,column=2)
-        self.button9 = Button(master, text="End Recording", command=lambda:self.stop(),height=1,state=DISABLED)
+        self.button9 = Button(master, text="End Recording", command=lambda:self.stop(),height=1)#state=DISABLED
         self.button9.grid(row=2,column=4)
         
    	
@@ -315,41 +341,41 @@ class Record_Testcases:
         master.columnconfigure(5,minsize=20,weight=1)
         master.columnconfigure(6,minsize=20,weight=1)
         #tacread = tree.insert("",0,"tacread",text = "tacread")
-        
-        self.listbox1 = Listbox(master)
+        scrollbar1 = Scrollbar(master,orient = "vertical")
+        self.listbox1 = Listbox(master,yscrollcommand = scrollbar1.set)
         #self.listbox1= listbox1
         self.listbox1.grid(row=3,column=1,sticky=NSEW,columnspan=8)
-        scrollbar1 = Scrollbar(master,orient = "vertical")
+        scrollbar1 = Scrollbar(master,orient = "vertical",command=self.listbox1.yview)
         scrollbar1.config(command = self.listbox1.yview)
         scrollbar1.grid(row=3,column=9,sticky=NSEW)
-        self.listbox1.insert(0,"dfgh")
-        self.listbox1.insert(0,"sdfg")
-
-
-
-
-        master.popup_menu = Menu(master)
+	master.popup_menu = Menu(master)
         master.popup_menu.add_command(label="Add Menu",command=lambda:self.addmenu(master))
         master.popup_menu.add_command(label="Add Testcase",command=lambda:self.addtestcase(master))
         master.popup_menu.add_command(label="Delete",command=lambda:self.delete(master))
 
         self.tree.bind("<Button-3>",self.popup)
-   #---------------------------new------------------------------
     def popup(self, event):
+
         iid = self.tree.identify_row(event.y)
+
         if iid:
+
          self.tree.selection_set(iid)
+
          try:
+
             self.pop = self.master.popup_menu.tk_popup(event.x_root, event.y_root, 0)
+
          finally:
+
             self.master.popup_menu.grab_release()
+
         else:
+
             pass
+
         self.item_iid = self.tree.selection()[0]
 
-
-
-#---------------------------new---------------------------------
     def addmenu(self,master):
         self.Labelx["text"] = "Enter the name of submenu" 
         #self.pop.destroy()
@@ -420,8 +446,10 @@ class Record_Testcases:
 	print 'lll'
 	self.qu=multiprocessing.Queue()
 	self.stop_but=multiprocessing.Queue()
+	self.rec_error=multiprocessing.Queue()
 	self.qu.put("Recording.....")	#to make sure queue size is not zero initially, make sure line is here only
-	self.rt1=multiprocessing.Process(target=recording,args=(self,abc,self.qu,self.stop_but))
+	self.rt1=multiprocessing.Process(target=recording,args=(self,abc,self.qu,self.stop_but,self.rec_error))
+					#(target=execute,args=(self,abc,self.finalpath4,self.equ1,self.equ2,self.equ3))
         self.rt1.start()
 	
 	
@@ -434,16 +462,28 @@ class Record_Testcases:
 	
 	
     def qu_check(self):
+		#write code to check if credentials are wrong (code might still work without throwing any errors, but won't give any output)
                 p=0
-		while self.qu.qsize()!=0:
-			
+		
+		while self.qu.qsize()!=0 :
+			if self.rec_error.qsize()!=0:
+				#show error
+				print 'Error aagaya'
+				error1=self.rec_error.get()
+				if "'NoneType' object has no attribute 'send'" in error1:
+					tkMessageBox.showinfo('Error.Probably connection not established. Details: ',str(error1))
+				else:
+					tkMessageBox.showinfo('Error: ',str(error1))
+				return		#out of qu_check	
 			if self.stop_but.qsize()!=0:
 				print 'stopped'
                                 p=1
-				return
+				return		#out of qu_check
 			self.listbox1.insert(END,self.qu.get())	
 			self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
                         self.listbox1.see(END)
+		
+		
                 self.master.after(500,self.qu_check)
                 
     def addtestcase(self,master):
