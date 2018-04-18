@@ -1,12 +1,14 @@
 import os,signal,uinput
  
-import sys
+import sys,signal
 import time,datetime
 import subprocess
 import socket
 from subprocess import Popen,call,PIPE
 #p2.stdout.readline not lines
 #make sure to remove all print lines in final
+
+print 'pid:'+ str(os.getpid())
 global Keyboard
 Keyboard = uinput.Device([uinput.KEY_RESERVED, uinput.KEY_1, uinput.KEY_2, uinput.KEY_3, uinput.KEY_4, uinput.KEY_5, uinput.KEY_6
 ,    uinput.KEY_7 #8
@@ -278,12 +280,13 @@ def exeserver(s,c):
 		print recvlist
 		rlist = eval(recvlist)
 		print 'rlist: '+str(rlist)		#rlist=[[ln1],[ln2],...], [ln1]= one keyboard event line with many keys(key_A,key_B,etc..)
+		loll=len(rlist)
 		for rkeys in rlist:
 			
 			combo=rkeys[-2]
 			delta=rkeys[-1]
 			combo_list=[]
-			#print combo_list
+			print 'combo:'+str(combo)
 			if not ("no_key" in combo):		#if Keyboard_event line was empty			
 				for i in combo:
 					if i!= "Key_not_yet_defined":
@@ -291,24 +294,39 @@ def exeserver(s,c):
 						exec(i) in globals(), locals()	# i = 'k=uinput.KEY_KN' #globals,locals because exec cannot be used inside a function which calls a subfunction(iter here)
  						combo_list.append(k)
 					elif i== "Key_not_yet_defined":
+						loll = loll-1
 						print "Recieved a not defined key, neglected it!"
-			Keyboard.emit_combo(combo_list)
+			if len(combo_list)==0:
+				print "This shouldn't have happened, no_key is not being sent to alserver"
+				raise Exception
+			else:				
+				Keyboard.emit_combo(combo_list)
 			print "combo_list: "+str(combo_list)
+			print "....."
 			#print "Keyboard event executed."
 			time.sleep(delta)
 		obrf=[]
 		sv = 0
 		rov=''
-		#obrf will store all brf lines until all keyboard events has been executed. After all keyboard events has been executed it will store the brf lines that come within 500 ms.
+		#obrf will store all brf lines until all keyboard events has been executed. After all keyboard events has been executed it will store the brf lines that come within 500 ms. 
+
+		#also I have changed the code such that alserver will wait for at max 5 sec after execution of keyboard events , to get data from logfile.
+		current1=datetime.datetime.now()		
+		maxt=current1+datetime.timedelta(0,5,0,0)
+					#datetime.timedelta([days[, seconds[, microseconds[, milliseconds[, minutes[, hours[, weeks]]]]]]]
+		
 		for line in iter(lambda: pp2.stdout.readline(),''):
-			
+			if datetime.datetime.now().time() > maxt.time():	#max 5 s condition
+						#print datetime.datetime.now().time() > nxt.time()
+						print 'max crossed'
+						break
 			if " [display-svc] [debug] BRF data :" in line:
 				obrf.append(line)
-				print 'brf line: '+line
+				print 'brf line in newlog file: '+line
 				
-			elif "Keyboard event" in line and sv!=len(rlist):   #second condition because Keyboard event lines were coming even after sv == len(rlist)
+			elif "Keyboard event" in line and sv!=loll:   #second condition because Keyboard event lines were coming even after sv == len(rlist)
 				sv+=1
-				print "keyboard line:" +line
+				print "keyboard line in new logfile:" +line
 				print 'sv:'+str(sv)
 			
 			if rov == 'bits_more':
@@ -319,7 +337,7 @@ def exeserver(s,c):
 						#print datetime.datetime.now().time() > nxt.time()
 						break
 
-			elif sv == len(rlist):
+			elif sv == loll:
 					print "All keyboard events recorded" 
 					rov='bits_more'
 					current=datetime.datetime.now()
@@ -334,6 +352,6 @@ def exeserver(s,c):
 		
 
 host= "192.168.7.2"
-port=1088
+port=4505
 password= "temppwd"
 server(host,port,password)

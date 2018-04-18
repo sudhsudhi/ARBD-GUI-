@@ -1,119 +1,144 @@
-[sudo] password for ubuntu: waiting....
+[sudo] password for ubuntu: pid:14119
+waiting....
 connected...
-[['[2018-04-18 09:07:40.244] [File Editor] [debug] Keyboard event received: d\n', '09:07:40.244', ['k=uinput.KEY_D'], 1.2070000000000007]]
-rlist: [['[2018-04-18 09:07:40.244] [File Editor] [debug] Keyboard event received: d\n', '09:07:40.244', ['k=uinput.KEY_D'], 1.2070000000000007]]
-i:    k=uinput.KEY_D
-combo_list: [(1, 32)]
-keyboard line:[2018-04-18 12:04:34.332] [File Editor] [debug] Keyboard event received: d
+os
+recording
+[['[2018-04-18 17:40:56.068] [File Editor] [debug] Keyboard event received: a\n', '17:40:56.068', ['k=uinput.KEY_A'], 0.30000000000000426], ['[2018-04-18 17:40:56.368] [File Editor] [debug] Keyboard event received: s\n', '17:40:56.368', ['k=uinput.KEY_S'], 0.2919999999999945]]
+rlist: [['[2018-04-18 17:40:56.068] [File Editor] [debug] Keyboard event received: a\n', '17:40:56.068', ['k=uinput.KEY_A'], 0.30000000000000426], ['[2018-04-18 17:40:56.368] [File Editor] [debug] Keyboard event received: s\n', '17:40:56.368', ['k=uinput.KEY_S'], 0.2919999999999945]]
+combo:['k=uinput.KEY_A']
+i:    k=uinput.KEY_A
+combo_list: [(1, 30)]
+.....
+combo:['k=uinput.KEY_S']
+i:    k=uinput.KEY_S
+combo_list: [(1, 31)]
+.....
+keyboard line in new logfile:[2018-04-18 17:41:35.161] [File Editor] [debug] Keyboard event received: a
 
 sv:1
-All keyboard events recorded
-brf line: [2018-04-18 12:04:34.405] [display-svc] [debug] BRF data : 'DDD '
+brf line in newlog file: [2018-04-18 17:41:35.239] [display-svc] [debug] BRF data : ';A '
 
-["[2018-04-18 12:04:34.405] [display-svc] [debug] BRF data : 'DDD '\n"]
-[['[2018-04-18 09:07:41.451] [File Editor] [debug] Keyboard event received: o\n', '09:07:41.451', ['k=uinput.KEY_O'], 2.5730000000000004]]
-rlist: [['[2018-04-18 09:07:41.451] [File Editor] [debug] Keyboard event received: o\n', '09:07:41.451', ['k=uinput.KEY_O'], 2.5730000000000004]]
-i:    k=uinput.KEY_O
-combo_list: [(1, 24)]
-keyboard line:[2018-04-18 12:04:46.806] [File Editor] [debug] Keyboard event received: o
+brf line in newlog file: [2018-04-18 17:41:35.550] [display-svc] [debug] BRF data : 'AS '
 
-sv:1
-All keyboard events recorded
-brf line: [2018-04-18 12:04:46.886] [display-svc] [debug] BRF data : 'DDDO '
-
-["[2018-04-18 12:04:46.886] [display-svc] [debug] BRF data : 'DDDO '\n"]
-[['[2018-04-18 09:07:44.024] [File Editor] [debug] Keyboard event received: r\n', '09:07:44.024', ['k=uinput.KEY_R'], 0.3200000000000003]]
-rlist: [['[2018-04-18 09:07:44.024] [File Editor] [debug] Keyboard event received: r\n', '09:07:44.024', ['k=uinput.KEY_R'], 0.3200000000000003]]
-i:    k=uinput.KEY_R
-combo_list: [(1, 19)]
-keyboard line:[2018-04-18 12:04:53.870] [File Editor] [debug] Keyboard event received: r
-
-sv:1
-All keyboard events recorded
-brf line: [2018-04-18 12:04:53.926] [display-svc] [debug] BRF data : 'DDDOR '
-
-["[2018-04-18 12:04:53.926] [display-svc] [debug] BRF data : 'DDDOR '\n"]
-[['[2018-04-18 09:07:44.344] [File Editor] [debug] Keyboard event received: r\n', '09:07:44.344', ['k=uinput.KEY_R'], 1.016999999999996]]
-rlist: [['[2018-04-18 09:07:44.344] [File Editor] [debug] Keyboard event received: r\n', '09:07:44.344', ['k=uinput.KEY_R'], 1.016999999999996]]
-i:    k=uinput.KEY_R
-combo_list: [(1, 19)]
-keyboard line:[2018-04-18 12:04:59.470] [File Editor] [debug] Keyboard event received: r
-
-sv:1
-All keyboard events recorded
-brf line: [2018-04-18 12:04:59.533] [display-svc] [debug] BRF data : 'DDDORR '
-
-["[2018-04-18 12:04:59.533] [display-svc] [debug] BRF data : 'DDDORR '\n"]
-[['[2018-04-18 09:07:45.361] [File Editor] [debug] Keyboard event received:  \n', '09:07:45.361', ['k=uinput.KEY_BASSBOOST'], 1.4370000000000047]]
-rlist: [['[2018-04-18 09:07:45.361] [File Editor] [debug] Keyboard event received:  \n', '09:07:45.361', ['k=uinput.KEY_BASSBOOST'], 1.4370000000000047]]
-i:    k=uinput.KEY_BASSBOOST
-combo_list: [(1, 209)]
-keyboard line:[2018-04-18 12:05:03.477] [File Editor] [debug] Keyboard event received: psp+psp
-
-sv:1
-All keyboard events recorded
-brf line: [2018-04-18 12:05:03.525] [display-svc] [debug] BRF data : 'DDDORR  '
-
-["[2018-04-18 12:05:03.525] [display-svc] [debug] BRF data : 'DDDORR  '\n"]
-[['[2018-04-18 09:07:46.798] [File Editor] [debug] Keyboard event received: d\n', '09:07:46.798', ['k=uinput.KEY_D'], 0.5689999999999955]]
-rlist: [['[2018-04-18 09:07:46.798] [File Editor] [debug] Keyboard event received: d\n', '09:07:46.798', ['k=uinput.KEY_D'], 0.5689999999999955]]
-i:    k=uinput.KEY_D
-combo_list: [(1, 32)]
-keyboard line:[2018-04-18 12:05:06.958] [File Editor] [debug] Keyboard event received: d
-
-sv:1
-All keyboard events recorded
-brf line: [2018-04-18 12:05:07.008] [display-svc] [debug] BRF data : 'DDDORR ;D '
-
-["[2018-04-18 12:05:07.008] [display-svc] [debug] BRF data : 'DDDORR ;D '\n"]
-[['[2018-04-18 09:07:47.367] [File Editor] [debug] Keyboard event received: o\n', '09:07:47.367', ['k=uinput.KEY_O'], 0.19900000000000517], ['[2018-04-18 09:07:47.566] [File Editor] [debug] Keyboard event received: o\n', '09:07:47.566', ['k=uinput.KEY_O'], 0.5989999999999966]]
-rlist: [['[2018-04-18 09:07:47.367] [File Editor] [debug] Keyboard event received: o\n', '09:07:47.367', ['k=uinput.KEY_O'], 0.19900000000000517], ['[2018-04-18 09:07:47.566] [File Editor] [debug] Keyboard event received: o\n', '09:07:47.566', ['k=uinput.KEY_O'], 0.5989999999999966]]
-i:    k=uinput.KEY_O
-combo_list: [(1, 24)]
-i:    k=uinput.KEY_O
-combo_list: [(1, 24)]
-keyboard line:[2018-04-18 12:05:17.261] [File Editor] [debug] Keyboard event received: o
-
-sv:1
-keyboard line:[2018-04-18 12:05:17.468] [File Editor] [debug] Keyboard event received: o
+keyboard line in new logfile:[2018-04-18 17:41:35.478] [File Editor] [debug] Keyboard event received: s
 
 sv:2
 All keyboard events recorded
-brf line: [2018-04-18 12:05:17.325] [display-svc] [debug] BRF data : 'DDDORR DO '
+["[2018-04-18 17:41:35.239] [display-svc] [debug] BRF data : ';A '\n", "[2018-04-18 17:41:35.550] [display-svc] [debug] BRF data : 'AS '\n"]
+[['[2018-04-18 17:40:56.660] [File Editor] [debug] Keyboard event received: d\n', '17:40:56.660', ['k=uinput.KEY_D'], 0.2680000000000007]]
+rlist: [['[2018-04-18 17:40:56.660] [File Editor] [debug] Keyboard event received: d\n', '17:40:56.660', ['k=uinput.KEY_D'], 0.2680000000000007]]
+combo:['k=uinput.KEY_D']
+i:    k=uinput.KEY_D
+combo_list: [(1, 32)]
+.....
+brf line in newlog file: [2018-04-18 17:41:36.759] [display-svc] [debug] BRF data : 'ASD '
 
-brf line: [2018-04-18 12:05:17.524] [display-svc] [debug] BRF data : 'DDDORR DOO '
-
-["[2018-04-18 12:05:17.325] [display-svc] [debug] BRF data : 'DDDORR DO '\n", "[2018-04-18 12:05:17.524] [display-svc] [debug] BRF data : 'DDDORR DOO '\n"]
-[['[2018-04-18 09:07:48.165] [File Editor] [debug] Keyboard event received: r\n', '09:07:48.165', ['k=uinput.KEY_R'], 1.3079999999999998]]
-rlist: [['[2018-04-18 09:07:48.165] [File Editor] [debug] Keyboard event received: r\n', '09:07:48.165', ['k=uinput.KEY_R'], 1.3079999999999998]]
-i:    k=uinput.KEY_R
-combo_list: [(1, 19)]
-brf line: [2018-04-18 12:05:21.246] [display-svc] [debug] BRF data : 'DDDORR DOOR '
-
-keyboard line:[2018-04-18 12:05:21.179] [File Editor] [debug] Keyboard event received: r
+keyboard line in new logfile:[2018-04-18 17:41:36.689] [File Editor] [debug] Keyboard event received: d
 
 sv:1
 All keyboard events recorded
-["[2018-04-18 12:05:21.246] [display-svc] [debug] BRF data : 'DDDORR DOOR '\n"]
-[['[2018-04-18 09:07:49.473] [File Editor] [debug] Keyboard event received:  \n', '09:07:49.473', ['k=uinput.KEY_BASSBOOST'], 10.375999999999998]]
-rlist: [['[2018-04-18 09:07:49.473] [File Editor] [debug] Keyboard event received:  \n', '09:07:49.473', ['k=uinput.KEY_BASSBOOST'], 10.375999999999998]]
+["[2018-04-18 17:41:36.759] [display-svc] [debug] BRF data : 'ASD '\n"]
+[['[2018-04-18 17:40:56.928] [File Editor] [debug] Keyboard event received: e\n', '17:40:56.928', ['k=uinput.KEY_E'], 0.23900000000000432]]
+rlist: [['[2018-04-18 17:40:56.928] [File Editor] [debug] Keyboard event received: e\n', '17:40:56.928', ['k=uinput.KEY_E'], 0.23900000000000432]]
+combo:['k=uinput.KEY_E']
+i:    k=uinput.KEY_E
+combo_list: [(1, 18)]
+.....
+keyboard line in new logfile:[2018-04-18 17:41:37.754] [File Editor] [debug] Keyboard event received: e
+
+sv:1
+All keyboard events recorded
+brf line in newlog file: [2018-04-18 17:41:37.839] [display-svc] [debug] BRF data : 'ASDE '
+
+["[2018-04-18 17:41:37.839] [display-svc] [debug] BRF data : 'ASDE '\n"]
+[['[2018-04-18 17:40:57.167] [File Editor] [debug] Keyboard event received: f\n', '17:40:57.167', ['k=uinput.KEY_F'], 1.634999999999998]]
+rlist: [['[2018-04-18 17:40:57.167] [File Editor] [debug] Keyboard event received: f\n', '17:40:57.167', ['k=uinput.KEY_F'], 1.634999999999998]]
+combo:['k=uinput.KEY_F']
+i:    k=uinput.KEY_F
+combo_list: [(1, 33)]
+.....
+keyboard line in new logfile:[2018-04-18 17:41:39.592] [File Editor] [debug] Keyboard event received: f
+
+sv:1
+All keyboard events recorded
+brf line in newlog file: [2018-04-18 17:41:39.676] [display-svc] [debug] BRF data : 'ASDEF '
+
+["[2018-04-18 17:41:39.676] [display-svc] [debug] BRF data : 'ASDEF '\n"]
+[['[2018-04-18 17:40:59.126] [File Editor] [debug] Keyboard event received: @\n', '17:40:59.126', ['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_2'], 0.46999999999999886]]
+rlist: [['[2018-04-18 17:40:59.126] [File Editor] [debug] Keyboard event received: @\n', '17:40:59.126', ['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_2'], 0.46999999999999886]]
+combo:['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_2']
+i:    k=uinput.KEY_LEFTSHIFT
+i:    k=uinput.KEY_2
+combo_list: [(1, 42), (1, 3)]
+.....
+brf line in newlog file: [2018-04-18 17:41:43.027] [display-svc] [debug] BRF data : 'ASDEF@A '
+
+keyboard line in new logfile:[2018-04-18 17:41:42.979] [File Editor] [debug] Keyboard event received: @
+
+sv:1
+All keyboard events recorded
+["[2018-04-18 17:41:43.027] [display-svc] [debug] BRF data : 'ASDEF@A '\n"]
+[['[2018-04-18 17:40:59.596] [File Editor] [debug] Keyboard event received: #\n', '17:40:59.596', ['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_3'], 0.39000000000000057]]
+rlist: [['[2018-04-18 17:40:59.596] [File Editor] [debug] Keyboard event received: #\n', '17:40:59.596', ['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_3'], 0.39000000000000057]]
+combo:['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_3']
+i:    k=uinput.KEY_LEFTSHIFT
+i:    k=uinput.KEY_3
+combo_list: [(1, 42), (1, 4)]
+.....
+brf line in newlog file: [2018-04-18 17:41:44.874] [display-svc] [debug] BRF data : 'ASDEF@A# '
+
+keyboard line in new logfile:[2018-04-18 17:41:44.812] [File Editor] [debug] Keyboard event received: #
+
+sv:1
+All keyboard events recorded
+["[2018-04-18 17:41:44.874] [display-svc] [debug] BRF data : 'ASDEF@A# '\n"]
+[['[2018-04-18 17:40:59.986] [File Editor] [debug] Keyboard event received: $\n', '17:40:59.986', ['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_4'], 1.132000000000005]]
+rlist: [['[2018-04-18 17:40:59.986] [File Editor] [debug] Keyboard event received: $\n', '17:40:59.986', ['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_4'], 1.132000000000005]]
+combo:['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_4']
+i:    k=uinput.KEY_LEFTSHIFT
+i:    k=uinput.KEY_4
+combo_list: [(1, 42), (1, 5)]
+.....
+brf line in newlog file: [2018-04-18 17:41:46.802] [display-svc] [debug] BRF data : 'ASDEF@A#@4 '
+
+max crossed
+["[2018-04-18 17:41:46.802] [display-svc] [debug] BRF data : 'ASDEF@A#@4 '\n"]
+[['[2018-04-18 17:41:01.118] [File Editor] [debug] Keyboard event received: %\n', '17:41:01.118', ['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_5'], 0.349]]
+rlist: [['[2018-04-18 17:41:01.118] [File Editor] [debug] Keyboard event received: %\n', '17:41:01.118', ['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_5'], 0.349]]
+combo:['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_5']
+i:    k=uinput.KEY_LEFTSHIFT
+i:    k=uinput.KEY_5
+combo_list: [(1, 42), (1, 6)]
+.....
+brf line in newlog file: [2018-04-18 17:41:53.939] [display-svc] [debug] BRF data : 'ASDEF@A#@4@3P '
+
+keyboard line in new logfile:[2018-04-18 17:41:53.893] [File Editor] [debug] Keyboard event received: %
+
+sv:1
+All keyboard events recorded
+["[2018-04-18 17:41:53.939] [display-svc] [debug] BRF data : 'ASDEF@A#@4@3P '\n"]
+[['[2018-04-18 17:41:01.467] [File Editor] [debug] Keyboard event received: ^\n', '17:41:01.467', ['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_6'], 3.0769999999999995], ['[2018-04-18 17:41:04.544] [File Editor] [debug] Keyboard event received:  \n', '17:41:04.544', ['k=uinput.KEY_BASSBOOST'], 5.657000000000001]]
+rlist: [['[2018-04-18 17:41:01.467] [File Editor] [debug] Keyboard event received: ^\n', '17:41:01.467', ['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_6'], 3.0769999999999995], ['[2018-04-18 17:41:04.544] [File Editor] [debug] Keyboard event received:  \n', '17:41:04.544', ['k=uinput.KEY_BASSBOOST'], 5.657000000000001]]
+combo:['k=uinput.KEY_LEFTSHIFT', 'k=uinput.KEY_6']
+i:    k=uinput.KEY_LEFTSHIFT
+i:    k=uinput.KEY_6
+combo_list: [(1, 42), (1, 7)]
+.....
+combo:['k=uinput.KEY_BASSBOOST']
 i:    k=uinput.KEY_BASSBOOST
 combo_list: [(1, 209)]
-keyboard line:[2018-04-18 12:05:26.039] [File Editor] [debug] Keyboard event received: psp+psp
+.....
+brf line in newlog file: [2018-04-18 17:41:55.786] [display-svc] [debug] BRF data : 'ASDEF@A#@4@3P_< '
+
+keyboard line in new logfile:[2018-04-18 17:41:55.702] [File Editor] [debug] Keyboard event received: ^
 
 sv:1
+keyboard line in new logfile:[2018-04-18 17:41:58.852] [File Editor] [debug] Keyboard event received: psp+psp
+
+sv:2
 All keyboard events recorded
-brf line: [2018-04-18 12:05:26.087] [display-svc] [debug] BRF data : 'DDDORR DOOR  '
+brf line in newlog file: [2018-04-18 17:41:58.951] [display-svc] [debug] BRF data : 'ASDEF@A#@4@3P_<  '
 
-["[2018-04-18 12:05:26.087] [display-svc] [debug] BRF data : 'DDDORR DOOR  '\n"]
-[['[2018-04-18 09:07:59.849] [File Editor] [debug] Keyboard event received: enter\n', '09:07:59.849', ['k=uinput.KEY_ENTER'], 0]]
-rlist: [['[2018-04-18 09:07:59.849] [File Editor] [debug] Keyboard event received: enter\n', '09:07:59.849', ['k=uinput.KEY_ENTER'], 0]]
-i:    k=uinput.KEY_ENTER
-combo_list: [(1, 28)]
-keyboard line:[2018-04-18 12:05:39.860] [File Editor] [debug] Keyboard event received: enter
-
-sv:1
-All keyboard events recorded
-brf line: [2018-04-18 12:05:39.953] [display-svc] [debug] BRF data : ''
-
-["[2018-04-18 12:05:39.953] [display-svc] [debug] BRF data : ''\n"]
+["[2018-04-18 17:41:55.786] [display-svc] [debug] BRF data : 'ASDEF@A#@4@3P_< '\n", "[2018-04-18 17:41:58.951] [display-svc] [debug] BRF data : 'ASDEF@A#@4@3P_<  '\n"]
+[['[2018-04-18 17:41:10.201] [File Editor] [debug] Keyboard event received: enter\n', '17:41:10.201', ['k=uinput.KEY_ENTER'], 0]]
+rlist: [['[2018-04-18 17:41:10.201] [File Editor] [debug] Keyboard event

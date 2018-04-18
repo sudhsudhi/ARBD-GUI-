@@ -29,15 +29,15 @@ import subprocess
 import socket
 from subprocess import Popen,call,PIPE
 from executer6 import ex,ex2,di,timeparse,linker,timedifference
-def recording(self,s,qu,stop_but,rec_error):
+def recording(self,path,s,qu,stop_but,rec_error):
 	try:
-		recordp(self,s,qu,stop_but)
+		recordp(self,path,s,qu,stop_but)
 	except Exception as e:
 		k=traceback.format_exc()
 		print 'ayyo'
 		print k
                 rec_error.put(k)
-def recordp(self,s,qu,stop_but):
+def recordp(self,path,s,qu,stop_but):
         #elf.listbox1.insert(END,"sonu")
 	
 	#gives a file of the name testcase_name which has two lists.The first list is parsed one and the second list is unparsed.
@@ -46,7 +46,7 @@ def recordp(self,s,qu,stop_but):
 	recv_msg=s.recv(1024)
 	print recv_msg
 	
-	testcase_name=self.finalpath1+"/"+self.Entry.get()+'.txt'
+	testcase_name=path
 	
 	qu.put("Recording started,you can start giving keystrokes...")
 	print "Recording started,you can start giving keystrokes..." 	
@@ -88,7 +88,14 @@ def recordp(self,s,qu,stop_but):
 		elif ('Keyboard event received' in line):
 			ji=ex(line)
 			blink.append([line,timeparse(line),ji])
-			print_ln=str(ji) + ' : ' + str(ex2(line))
+			#print_ln=str(ji) + ' : ' + str(ex2(line))
+			print_ln=''		#instead of ex2 and all you could just split the line
+			for i in ex2(line):
+				if print_ln!='':
+					print_ln=print_ln+" + "+str(i)
+				else:
+					print_ln=str(i)
+			print_ln="Keystrokes received: " + print_ln
 			print print_ln
 			qu.put(print_ln)
 			
@@ -127,10 +134,7 @@ def recordp(self,s,qu,stop_but):
 		else:
 			ik-=1
 	
-	
-	#print 'The test case recorded is:'
-        self.listbox1.insert(0,'The test case recorded is:')
-	for i in range(len(testcase)-1):
+	'''for i in range(len(testcase)-1):
 				
 			print testcase[i]
                         
@@ -138,14 +142,14 @@ def recordp(self,s,qu,stop_but):
 			print blink[i+1]
                         
 			print ' '
-                        
+        '''                
 	  		
     	with open(testcase_name, "w") as f1:
         		
 			f1.write(str(blink)+'\n')
 			f1.write(str(testcase)+'\n')
 			   #to call the function sassy
-	
+	print "testcase generated;testcase name:"+testcase_name
 	#no need to close files, with automatically closes
 	
 	#link is the arsed one and testcase is the unparsed.
@@ -270,8 +274,8 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 				sendlist=[]
 				outbrf=s.recv(1024)
 				print outbrf,'<<outbrf',len(outbrf),type(outbrf)
-				#if not outbrf:
-				#	break
+				if not outbrf:
+					break
 				ibrf = str(line).split(" [display-svc] [debug] BRF data :")[-1]
 				
 				obrf = eval(outbrf)
@@ -287,10 +291,10 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 						continue
 					sbrf = str(string).split(" [display-svc] [debug] BRF data :")[-1]
 					executed.append(string)
-					equ1.put(('',ibrf,sbrf,'Pass'))
+					
 					if sbrf == str(ibrf):
 						tick = True
-						
+						equ1.put(('',ibrf,sbrf,'Pass'))
 						break
 				if tick is True:
 					print "BRF data: " + str(ibrf[-1]) + " matched!"
@@ -318,10 +322,22 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 					s.send("tervar=1")
 					break
 			elif not('o' in line):
-				equ1.put((line,'','',''))
-				sendlist.append(line)
-				executed.append(line)
-		print "Test case '" + testcase_name + "' passed!"
+				#no_key is not sent to alserver
+				if line[-2]==['no_key']:
+					delta=line[-1]
+					time.sleep(delta)  #so that time delay is maintained
+					equ1.put(('no_key','','',''))
+					print 'no_key_received'
+				else:
+				
+				
+					j_1=line[0].split("Keyboard event received: ")[-1][:-1]  #refer ex2 in executer6 for details
+					
+					equ1.put((j_1,'','',''))
+					sendlist.append(line)
+					executed.append(line)
+		print "Finished executing the testcase:'" + testcase_name
+		equ3.put('finished')
 	
 	
 #----------------------------------------------------------------------------------------

@@ -8,6 +8,7 @@ import ttk
 from alclient import conn_send,execute,recording
 from subprocess import Popen,call,PIPE
 from executer6 import ex,ex2,di,timeparse,linker,timedifference
+from random import randint
 abc = None
 #socket can be called by abc
 #take care of wut in record ,execute and disconnect
@@ -27,14 +28,15 @@ class mainclass():
         self.master = master
         master.frame = tk.Frame(master)
         #master.geometry("{0}x{1}+0+0".format(master.winfo_screenwidth(),master.winfo_screenheight()))
+        self.textx=""
         master.title("Automated RBD testing")
         master["bg"]= "white"
         label1 = Label(master,text="Automated RBD Testing App",bg="white",fg="black",font=  ("Arial","30","bold italic"))
         label1.grid(row=1,column=1,columnspan=7)
         #label1.place(relx=0.5,rely=0.4,anchor="center")
-        self.button1 = ttk.Button(master, text="Connect", command=lambda:self.port())
+        self.button1 = ttk.Button(master, text="Connect", command=lambda:self.newone())
         self.button1.grid(row=3,column=1)
-        self.button4 = ttk.Button(master, text="Disconnect", command="")	#end nimbal's process at disconnect
+        self.button4 = ttk.Button(master, text="Disconnect", command="",state= DISABLED)	#end nimbal's process at disconnect
         self.button4.grid(row=3,column=3)
         #self.text.set("connect")
         #self.button1.place(relx=0.5,rely=0.5,anchor="center")
@@ -42,11 +44,11 @@ class mainclass():
         #button2.place(relx=0.6,rely=0.5,anchor="center")
         #master.rowconfigure(0,weight=1)
         #master.columnconfigure(0,weight=1)
-        self.button2 = ttk.Button(master, text="Record", command=lambda:self.Record())
+        self.button2 = ttk.Button(master, text="Record", command=lambda:self.Record(),state=DISABLED)
         self.button2.grid(row=3,column=5)
         #self.button2.place(relx=0.4,rely=0.5,anchor="center")
         #button2.lower(master.frame)
-        self.button3 = ttk.Button(master, text="Excecute", command=lambda:self.execute_testcase())
+        self.button3 = ttk.Button(master, text="Excecute", command=lambda:self.execute_testcase(),state=DISABLED)
         self.button3.grid(row=3,column=7)
         #self.button3.place(relx=0.6,rely=0.5,anchor="center")
         #button3.lower(master.frame)
@@ -111,8 +113,10 @@ class mainclass():
         self.Entry5.grid(row=1,column=1)
         self.root4.grid_rowconfigure(2, minsize=20)
         button4 = Button(self.root4, text="OK", command=lambda:self.newone(),height=1,width=8).grid(row=3,column=0,columnspan=2)
+    
     def newone(self):
-        Portnumber = self.Entry5.get()
+        
+        Portnumber = randint(1000,9999)
         execfile("alclient.py")
         #p='connected'
 	with open('settings.txt','r') as f:
@@ -124,11 +128,14 @@ class mainclass():
 	p=conn_send(userid,password,Ipaddress,Portnumber,self)
 	print p
 	if p[0]=='connected':
-		self.root4.destroy()
+		#self.root4.destroy()
                 self.button2["state"]='normal'
                 self.button3["state"]='normal'
                 self.button4["state"]='normal'
                 self.button1["state"]='disabled'
+                #label10.destroy()
+                label11 = Label(self.master,text="Connected",bg="white",fg="black",font=  ("Arial","15","bold italic"))
+                label11.grid(row=0,column=1,columnspan=5)
 		self.socc=p[1]
 		self.conn_proc=p[2]
 		global abc
@@ -205,7 +212,7 @@ class mainclass():
         item_iid = self.item_iid1
         path = self.tree1.item(item_iid,'text')
         ab = self.tree1.parent(item_iid)
-        #print ab
+        print 'ab'
         while path !="" :
              text1 = path +"/"  +text1
              item_iid = self.tree1.parent(item_iid)
@@ -226,24 +233,42 @@ class mainclass():
 				print 'p:'+str(p)
                                 self.treeview.insert('',"end",text=p[0],values=(p[1],p[2],p[3]))
 				self.treeview.update_idletasks()     #my line 
-		
-		elif self.equ3.get()=='wait':
+		if self.equ3.qsize()!=0:
 			if self.equ1.qsize()!=0:
 				p=self.equ1.get()
 				print 'p:'+str(p)
                                 self.treeview.insert('',"end",text=p[0],values=(p[1],p[2],p[3]))
 				self.treeview.update_idletasks()     #my line 
 
-			mesgbox =   tkMessageBox.askyesno("Error","BRF data didn't match! Continue execution or stop?")
-			if mesgbox:
-				self.equ2.put('c')
-			else:
+			equ3v=self.equ3.get()
+			print 'equ3v:'+equ3v
+			if equ3v =='wait':
+				print 'unmatched '
+		                 
+		                #self.treeview.see(END)                                  #my line 
+				print 'mesgboxing'
+				mesgbox =   tkMessageBox.askyesno("Error","BRF data didn't match! Continue execution or stop?",parent=self.root4)
+				if mesgbox:
+					self.equ2.put('c')
+				else:
 				
-				self.equ2.put('s')
-				self.et1.join()
-				return
-																		
-                self.master.after(500,self.equ_check)
+					self.equ2.put('s')
+					self.treeview.insert('',"end",text='',values=('','',''))
+					self.treeview.insert('',"end",text='',values=('','',''))
+					self.treeview.insert('',"end",text='',values=('','Execution stopped by user' ,''))
+					self.treeview.update_idletasks()
+					self.et1.join()
+					return
+			if equ3v=='finished':
+					self.treeview.insert('',"end",text='',values=('','',''))
+					self.treeview.insert('',"end",text='',values=('','',''))
+					self.treeview.insert('',"end",text='',values=('','',''))
+					self.treeview.insert('',"end",text='',values=('','Finished execution',''))
+					self.treeview.update_idletasks()
+					self.et1.join()
+					print "Thread joined, finished execution.."	
+					return 														
+                self.master.after(100,self.equ_check)
     def process_directory(self, parent, path):
         for p in os.listdir(path):
             abspath = os.path.join(path, p)
@@ -254,7 +279,7 @@ class mainclass():
 
     def table(self,master):
         style = ttk.Style()
-        style.configure(".", font=('Helvetica', 12))
+        #style.configure(".", font=('Helvetica', 12))
         style.configure("Treeview", foreground='red')
         style.configure("Treeview.Heading", foreground='Black',background="SkyBlue")
         self.tree2 = ttk.Treeview( master, columns=('Main heading', 'heading','sub heading','Testcase','KeyStrokes','Output','Passed'))
@@ -265,13 +290,13 @@ class mainclass():
         self.tree2.heading('#0', text='KeyStrokes')
         self.tree2.heading('#1', text='Ideal Output')
         self.tree2.heading('#2', text='Received output')
-        self.tree2.column('#2',width=150, stretch=False)
-        self.tree2.column('#1',width=160, stretch=False)
-        self.tree2.column('#0',width=150, stretch=False)
-        self.tree2.column('#3',width=150, stretch=False)
+        self.tree2.column('#2',width=220, stretch=False)
+        self.tree2.column('#1',width=220, stretch=False)
+        self.tree2.column('#0',width=220, stretch=False)
+        self.tree2.column('#3',width=220, stretch=False)
         #self.tree2.column('#4',width=150, stretch=False)
         ##self.tree2.column('#5',width=150, stretch=False)
-        self.tree2.column('#6',width=150, stretch=False)
+        #self.tree2.column('#6',width=150, stretch=False)
         self.tree2.grid(row=0,column=1, columnspan=7,rowspan=3, sticky='nsew')
         #self.tree.pack()
         self.treeview = self.tree2
@@ -320,7 +345,7 @@ class Record_Testcases:
         self.button7.grid(row=2,column=1)
         self.button8 = Button(master, text="Start Recording", command=lambda:self.recording1(),height=1,state=DISABLED)
         self.button8.grid(row=2,column=2)
-        self.button9 = Button(master, text="End Recording", command=lambda:self.stop(),height=1)#state=DISABLED
+        self.button9 = Button(master, text="End Recording", command=lambda:self.stop(),height=1,state=DISABLED)
         self.button9.grid(row=2,column=4)
         
    	
@@ -419,10 +444,14 @@ class Record_Testcases:
                 tkMessageBox.showinfo('Error: ',"This folder already exists")'''
     def abcd(self):
         #print self.finalpath
+      if self.Entry.get() =="":
+        tkMessageBox.showinfo('Error: ',"please enter a valid name",parent=self.master)
+      else:     
         path = self.finalpath+self.Entry.get()
         if not os.path.exists(path):
              print path
              os.makedirs(path)
+             self.Entry.delete(0,END)
              self.Entry["state"] = DISABLED
              self.button7["state"] = DISABLED
         else:
@@ -435,17 +464,22 @@ class Record_Testcases:
     
 	
     def recording1(self):
+     if self.Entry.get() =="":
+        tkMessageBox.showinfo('Error: ',"please enter a valid name",parent=self.master)
+     else:
 	self.button8["state"]=DISABLED
         path = self.finalpath1+self.Entry.get()+".txt"
+        print path
         if not os.path.exists(path):
              print path
              #os.makedirs(path)
              f = open(path,'w')
              f.close()
+             self.Entry.delete(0,END)
              self.Entry["state"] = DISABLED
              self.button7["state"] = DISABLED
         else:
-             tkMessageBox.showinfo('Error: ',"this folder already exists")
+             tkMessageBox.showinfo('Error: ',"this folder already exists",parent=self.master)
         self.tree.delete(*self.tree.get_children())
         abspath = os.path.abspath("tacread")
         self.root_node = self.tree.insert('', 'end', text="tacread", open=True)
@@ -456,7 +490,7 @@ class Record_Testcases:
 	self.stop_but=multiprocessing.Queue()
 	self.rec_error=multiprocessing.Queue()
 	self.qu.put("Recording.....")	#to make sure queue size is not zero initially, make sure line is here only
-	self.rt1=multiprocessing.Process(target=recording,args=(self,abc,self.qu,self.stop_but,self.rec_error))
+	self.rt1=multiprocessing.Process(target=recording,args=(self,path,abc,self.qu,self.stop_but,self.rec_error))
 					#(target=execute,args=(self,abc,self.finalpath4,self.equ1,self.equ2,self.equ3))
         self.rt1.start()
 	
@@ -479,12 +513,15 @@ class Record_Testcases:
 				print 'Error aagaya'
 				error1=self.rec_error.get()
 				if "'NoneType' object has no attribute 'send'" in error1:
-					tkMessageBox.showinfo('Error.Probably connection not established. Details: ',str(error1))
+					tkMessageBox.showinfo('Error.Probably connection not established. Details: ',str(error1),parent=self.master)
 				else:
-					tkMessageBox.showinfo('Error: ',str(error1))
+					tkMessageBox.showinfo('Error: ',str(error1),parent=self.master)
 				return		#out of qu_check	
 			if self.stop_but.qsize()!=0:
 				print 'stopped'
+				self.listbox1.insert(END,"FINISHED RECORDING, TESTCASE GENERATED.")	
+				self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
+                        	self.listbox1.see(END)
                                 p=1
 				return		#out of qu_check
 			self.listbox1.insert(END,self.qu.get())	
@@ -524,7 +561,7 @@ class Record_Testcases:
 	
         self.stop_but.put("stopped...")
 	time.sleep(4)
-        print "Recording stopped, processinag and generating testcase...."
+        print "Recording stopped, processing and generating testcase...."
 	
 	self.rt1.join()
         
