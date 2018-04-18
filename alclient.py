@@ -192,14 +192,15 @@ def conn_send(userid,password,Ipaddress,Portnumber,shlf):
 		cmd1='python connect.py'
 		p1 = subprocess.Popen(cmd1, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
 		time.sleep(5)
+		'''		
 		i=10
-		'''for line in iter(lambda: p1.stderr.readline(),''):
+		for line in iter(lambda: p1.stderr.readline(),''):
 				while i>0:
 					print 'lo'
 					print line 
 					i=i-1
+		
 		'''
-	
 		k=0
 		
 		shlf.sock=socket.socket()
@@ -251,7 +252,7 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 	wut='e'
 	s.send(wut)			#sending wut
 	recv_msg=s.recv(1024)
-	
+	print recv_msg
 	
 	with open(testcase_name,'r') as f:
 		ideal_link=f.readlines()[0]
@@ -268,9 +269,9 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 				print 'sendlist:'+str(sendlist)
 				sendlist=[]
 				outbrf=s.recv(1024)
-				print outbrf,'<<outbrf'
-				if not outbrf:
-					break
+				print outbrf,'<<outbrf',len(outbrf),type(outbrf)
+				#if not outbrf:
+				#	break
 				ibrf = str(line).split(" [display-svc] [debug] BRF data :")[-1]
 				
 				obrf = eval(outbrf)
@@ -294,17 +295,24 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 				if tick is True:
 					print "BRF data: " + str(ibrf[-1]) + " matched!"
 				else:
+					print 'Failed'
 					equ1.put(('',ibrf,sbrf,"Fail"))					
 					equ3.put('wait')
-					while True:
+					kyun='kyun'
+					while kyun=='kyun':
 						if equ2.qsize()==0:
+							#print 'equ2.qsize():' + str(equ2.qsize())
 							continue
 						else:
-							if equ2.get()=='c':
+							equget=equ2.get()
+							kyun='notkyun'
+							print 'equ2.get():'+equget
+							if equget=='c':
 								uip='c'
-							elif equ2.get()=='s':
+								
+							elif equget=='s':
 								uip='s'		
-						
+						print 'uip:'+uip
 					#uip = raw_input("Test case '" + tc + "' failed: Enter 'c' to continue or 's' to stop:")
 				if uip == "s":
 					s.send("tervar=1")

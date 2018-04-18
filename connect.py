@@ -9,7 +9,20 @@ def conn(host,usr,pswd):
 	ftp_client.put(dir_path+'/alserver.py','/home/ubuntu/alserver.py')
 	time.sleep(3)
 	stdin,stdout,stderr=ssh_client.exec_command('sudo -S <<< "'+pswd +'" python /home/ubuntu/alserver.py', get_pty = True)   #sudo -S <<< ".Book40" python /home/
+	f=open('errors.txt','w')
+	i=10
+	
+	for line in iter(lambda: stdout.readline(),''):
+					f.write(line)
+					#i=i-1
+	'''
+	for line in iter(lambda: stderr.readline(),''):
+					f.write(line)
+					#i=i-1
+	'''
+	f.close()
 	time.sleep(999999)
+
 	print "running"
 	os._exit(0)
 host= "192.168.7.2"

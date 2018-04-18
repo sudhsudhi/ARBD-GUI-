@@ -221,11 +221,19 @@ class mainclass():
 	self.equ_check()
     def equ_check(self):
 		if self.equ3.qsize()==0:
-			if self.equ3.qsize()!=0:
+			if self.equ1.qsize()!=0:
 				p=self.equ1.get()
+				print 'p:'+str(p)
                                 self.treeview.insert('',"end",text=p[0],values=(p[1],p[2],p[3]))
+				self.treeview.update_idletasks()     #my line 
 		
 		elif self.equ3.get()=='wait':
+			if self.equ1.qsize()!=0:
+				p=self.equ1.get()
+				print 'p:'+str(p)
+                                self.treeview.insert('',"end",text=p[0],values=(p[1],p[2],p[3]))
+				self.treeview.update_idletasks()     #my line 
+
 			mesgbox =   tkMessageBox.askyesno("Error","BRF data didn't match! Continue execution or stop?")
 			if mesgbox:
 				self.equ2.put('c')
