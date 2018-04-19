@@ -250,9 +250,16 @@ def compare(resulted_link_l,ideal_link_l):
 		return True
 	else:
 		return False
-	
+def execute(self,s,testcase_name,equ1,equ2,equ3,exe_error):
+	try:
+		executep(self,s,testcase_name,equ1,equ2,equ3)
+	except Exception as e:
+		k=traceback.format_exc()
+		print 'ayyo'
+		print k
+                exe_error.put(k)	
 
-def execute(self,s,testcase_name,equ1,equ2,equ3):
+def executep(self,s,testcase_name,equ1,equ2,equ3):
 	wut='e'
 	s.send(wut)			#sending wut
 	recv_msg=s.recv(1024)
@@ -264,8 +271,12 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 		ilink=eval(ideal_link)
 		sendlist=[]
 		executed=[]
+		brfl=[]
+		
+		b2=0
 		for line in ilink:
 			if "BRF data" in line:
+				brfl.append(line)
 				
 				if len(sendlist)==0:
 					continue
@@ -276,14 +287,19 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 				print outbrf,'<<outbrf',len(outbrf),type(outbrf)
 				if not outbrf:
 					break
-				ibrf = str(line).split(" [display-svc] [debug] BRF data :")[-1]
+				ibrf = []
+				print str(b2)+'<b2',str(len(brfl))
+				for i in range(b2,len(brfl)):
+
+					k=str(brfl[i]).split(" [display-svc] [debug] BRF data :")[-1]
+					ibrf.append(k)
 				
 				obrf = eval(outbrf)
 				tick = False
 				uip ='c'
-				tup=[]
 				
-				print "IDEAL:" + ibrf
+				
+				print "IDEAL:" + str(ibrf)
 				print "RECEIVED:" + str(obrf)
 				print ' '
 				for string in obrf:
@@ -292,15 +308,15 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 					sbrf = str(string).split(" [display-svc] [debug] BRF data :")[-1]
 					executed.append(string)
 					
-					if sbrf == str(ibrf):
+					if sbrf in ibrf:
 						tick = True
-						equ1.put(('',ibrf,sbrf,'Pass'))
+						equ1.put(('',sbrf,sbrf,'Passed'))
 						break
 				if tick is True:
-					print "BRF data: " + str(ibrf[-1]) + " matched!"
+					print "BRF data: "  + " matched!"
 				else:
 					print 'Failed'
-					equ1.put(('',ibrf,sbrf,"Fail"))					
+					equ1.put(('',ibrf[-1],sbrf,"Failed"))					
 					equ3.put('wait')
 					kyun='kyun'
 					while kyun=='kyun':
@@ -322,6 +338,7 @@ def execute(self,s,testcase_name,equ1,equ2,equ3):
 					s.send("tervar=1")
 					break
 			elif not('o' in line):
+				b2=len(brfl)
 				#no_key is not sent to alserver
 				if line[-2]==['no_key']:
 					delta=line[-1]

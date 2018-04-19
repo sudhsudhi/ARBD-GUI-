@@ -351,7 +351,9 @@ def exeserver(s,c):
 		c.send(str(obrf))	#only 2 brf data lines are sent atmost
 		
 
+
+
 host= "192.168.7.2"
-port=4505
+port=2662
 password= "temppwd"
 server(host,port,password)

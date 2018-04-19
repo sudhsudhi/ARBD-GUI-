@@ -221,12 +221,20 @@ class mainclass():
 	#_____________________________
 	self.equ1=multiprocessing.Queue()
 	self.equ2=multiprocessing.Queue()
-	self.equ3=multiprocessing.Queue()	
+	self.equ3=multiprocessing.Queue()
+	self.exe_error=multiprocessing.Queue()	
 	
-	self.et1=multiprocessing.Process(target=execute,args=(self,abc,self.finalpath4,self.equ1,self.equ2,self.equ3))
+	self.et1=multiprocessing.Process(target=execute,args=(self,abc,self.finalpath4,self.equ1,self.equ2,self.equ3,self.exe_error))
         self.et1.start()
 	self.equ_check()
     def equ_check(self):
+		if self.exe_error.qsize()!=0:
+				#show error
+				print 'Error aagaya'
+				error1=self.exe_error.get()
+				
+				tkMessageBox.showinfo('Error: ',str(error1),parent=self.master)
+				return		#out of equ_check	
 		if self.equ3.qsize()==0:
 			if self.equ1.qsize()!=0:
 				p=self.equ1.get()
