@@ -232,8 +232,12 @@ class mainclass():
 				#show error
 				print 'Error aagaya'
 				error1=self.exe_error.get()
-				
-				tkMessageBox.showinfo('Error: ',str(error1),parent=self.master)
+				if "Broken pipe" in error1:
+					tkMessageBox.showinfo('Error: ',"CONNECTION BROKEN,CONNECT AGAIN\n"+str(error1),parent=self.master)
+				else:
+	
+					tkMessageBox.showinfo('Error: ',str(error1),parent=self.master)
+
 				return		#out of equ_check	
 		if self.equ3.qsize()==0:
 			if self.equ1.qsize()!=0:
@@ -521,11 +525,13 @@ class Record_Testcases:
 				print 'Error aagaya'
 				error1=self.rec_error.get()
 				if "'NoneType' object has no attribute 'send'" in error1:
-					tkMessageBox.showinfo('Error.Probably connection not established. Details: ',str(error1),parent=self.master)
+					tkMessageBox.showinfo('Error.Probably connection not yet established. Details: ',str(error1),parent=self.master)
+				elif "Broken pipe" in error1:
+					tkMessageBox.showinfo('Error: ',"CONNECTION BROKEN,CONNECT AGAIN\n"+str(error1),parent=self.master)
 				else:
 					tkMessageBox.showinfo('Error: ',str(error1),parent=self.master)
 				return		#out of qu_check	
-			if self.stop_but.qsize()!=0:
+			if self.stop_but.qsize()!=0 :
 				print 'stopped'
 				self.listbox1.insert(END,"FINISHED RECORDING, TESTCASE GENERATED.")	
 				self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
@@ -537,7 +543,7 @@ class Record_Testcases:
                         self.listbox1.see(END)
 		
 		
-                self.master.after(500,self.qu_check)
+                self.master.after(50,self.qu_check)
                 
     def addtestcase(self,master):
         self.Labelx["text"] = "Enter the name of Testcase" 
@@ -567,7 +573,7 @@ class Record_Testcases:
     	
     def stop(self):
 	
-        self.stop_but.put("stopped...")
+        self.stop_but.put("stop")
 	time.sleep(4)
         print "Recording stopped, processing and generating testcase...."
 	

@@ -51,7 +51,7 @@ def recordp(self,path,s,qu,stop_but):
 	qu.put("Recording started,you can start giving keystrokes...")
 	print "Recording started,you can start giving keystrokes..." 	
 
-	s.send('continue')
+	
 	qwer=0
 	testcase=[]	#testcase contains the unparsed lines as srecieved	
 	blink=[]		#blink contains parsed lines of the logfile. blink=BRF_BASED_link
@@ -70,11 +70,24 @@ def recordp(self,path,s,qu,stop_but):
 	while qwer==0:
 		
 		if stop_but.qsize()!=0:
-		
-			u_input='stop'                           
+			u_input='stop' 
+			                          
 		else:
 			u_input='blah blah'
-		
+
+		print 'u_input;'+u_input
+		if u_input=='stop':
+			s.send('stop')	
+			f=s.recv(1024)	
+			print f
+                        	
+			qwer+=1
+			continue
+		else:
+			
+			s.send('continue')
+			print 'h is here!'
+
 		#stop_button.py waits for 2 seconds after recieving the stop command to actually send stop to alclient.py
 		#this is necessary as the last few BRF data lines in the log_file after the last keyboard event line is also required.
 		line=s.recv(1024)
@@ -101,16 +114,7 @@ def recordp(self,path,s,qu,stop_but):
 			
 			#self.listbox1.insert(tk.END,print_ln+'\n')
 			#self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
-		if u_input=='stop':
-			s.send('stop')	
-			f=s.recv(1024)	
-			print f
-                        	
-			qwer+=1
 		
-		else:
-			
-			s.send('continue')
 
 	for i in range(len(blink)-1): #adding timedifference
 		if str(type(blink[i]))=="<type 'list'>":

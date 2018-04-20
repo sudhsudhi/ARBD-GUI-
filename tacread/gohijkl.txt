@@ -1,0 +1,2 @@
+['o', ['[2018-04-16 09:50:03.764] [File Editor] [debug] Keyboard event received: q\n', '09:50:03.764', ['k=uinput.KEY_Q'], 0]]
+['[2018-04-16 09:50:03.764] [File Editor] [debug] Keyboard event received: q\n']
