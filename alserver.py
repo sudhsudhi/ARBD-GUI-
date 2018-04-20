@@ -354,6 +354,6 @@ def exeserver(s,c):
 
 
 host= "192.168.7.2"
-port=2662
-password= "temppwd"
+port=2651
+password= ".Book40"
 server(host,port,password)

@@ -30,5 +30,5 @@ def conn(host,usr,pswd):
 	os._exit(0)
 host= "192.168.7.2"
 usr= "ubuntu"
-password= "temppwd"
+password= ".Book40"
 conn(host,usr,password)

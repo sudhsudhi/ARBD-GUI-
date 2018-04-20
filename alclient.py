@@ -338,7 +338,7 @@ def executep(self,s,testcase_name,equ1,equ2,equ3):
 					s.send("tervar=1")
 					break
 			elif not('o' in line):
-				b2=len(brfl)
+				b2=len(brfl)-1
 				#no_key is not sent to alserver
 				if line[-2]==['no_key']:
 					delta=line[-1]
