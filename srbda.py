@@ -44,11 +44,11 @@ class mainclass():
         #button2.place(relx=0.6,rely=0.5,anchor="center")
         #master.rowconfigure(0,weight=1)
         #master.columnconfigure(0,weight=1)
-        self.button2 = ttk.Button(master, text="Record", command=lambda:self.Record(),state=DISABLED)
+        self.button2 = ttk.Button(master, text="Record", command=lambda:self.Record())
         self.button2.grid(row=3,column=5)
         #self.button2.place(relx=0.4,rely=0.5,anchor="center")
         #button2.lower(master.frame)
-        self.button3 = ttk.Button(master, text="Excecute", command=lambda:self.execute_testcase(),state=DISABLED)
+        self.button3 = ttk.Button(master, text="Excecute", command=lambda:self.execute_testcase())
         self.button3.grid(row=3,column=7)
         #self.button3.place(relx=0.6,rely=0.5,anchor="center")
         #button3.lower(master.frame)
@@ -235,9 +235,7 @@ class mainclass():
 				if "Broken pipe" in error1:
 					tkMessageBox.showinfo('Error: ',"CONNECTION BROKEN,CONNECT AGAIN\n"+str(error1),parent=self.master)
 				else:
-	
 					tkMessageBox.showinfo('Error: ',str(error1),parent=self.master)
-
 				return		#out of equ_check	
 		if self.equ3.qsize()==0:
 			if self.equ1.qsize()!=0:
@@ -347,25 +345,35 @@ class mainclass():
 class Record_Testcases:
     def __init__(self,master):
         self.master = master
+        style = ttk.Style()
 	self.printer=[] #s#
-        self.Labelx = Label(master,text="")
-        self.Labelx.grid(row=0,column=0)
-        self.Entry=Entry(master,width=80,state = DISABLED)
-        self.Entry.grid(row=0,column=1,columnspan=3,sticky=NSEW)
+        #self.Labelx = Label(master,text="")
+        #self.Labelx.grid(row=0,column=0)
+        #self.Entry=Entry(master,width=80,state = DISABLED)
+        #self.Entry.grid(row=0,column=1,columnspan=3,sticky=NSEW)
         #self.master.grid_rowconfigure(1, minsize=20)
-        self.button7 = Button(master, text="Ok", command=lambda:self.abcd(),height=1,width=8,state = DISABLED)
-        self.button7.grid(row=2,column=1)
-        self.button8 = Button(master, text="Start Recording", command=lambda:self.recording1(),height=1,state=DISABLED)
-        self.button8.grid(row=2,column=2)
+        #self.button7 = Button(master, text="Ok", command=lambda:self.abcd(),height=1,width=8,state = DISABLED)
+        #self.button7.grid(row=2,column=1)
+        #self.button8 = Button(master, text="Start Recording", command=lambda:self.recording1(),height=1,state=DISABLED)
+        #self.button8.grid(row=2,column=2)
         self.button9 = Button(master, text="End Recording", command=lambda:self.stop(),height=1,state=DISABLED)
-        self.button9.grid(row=2,column=4)
-        
-   	
+        self.button9.grid(row=5,column=0)
+        #---------------------------------------
+   	self.tree2 = ttk.Treeview( master, columns=('Sr. number','Keyword name','keyword'))
+   	style.configure("Treeview.Heading", foreground='Black',background="SkyBlue")
+   	self.tree2.heading('#0', text='No.')
+        self.tree2.heading('#1', text='BRF DATA')
+        self.tree2.heading('#2', text='Keyboard Event')
+        self.tree2.column('#0',width=280, stretch=False)
+        self.tree2.column('#1',width=280, stretch=False)
+        self.tree2.column('#2',width=280, stretch=False)
+        self.tree2.grid(row=0,column=1, rowspan=8, sticky='nsew')
+        #style.configure("Treeview", foreground='red')
    	#recordclient(self.socc,self.Entry.get())
         self.tree = ttk.Treeview(master)
         tree =  self.tree
         #tree.pack(side=LEFT,fill=Y)
-        tree.grid(row=1,column=0,sticky="nsew",rowspan=3)
+        tree.grid(row=0,column=0,sticky="nsew",rowspan=4)
         #self.master.grid_rowconfigure(1, weight=1)
         #tree.grid(row=0,column=0,rowspan=2,columnspan=8,sticky=NSEW)
         #.geometry("{0}x{1}+0+0".format(self.winfo_screenwidth(),self.winfo_screenheight()))
@@ -374,25 +382,25 @@ class Record_Testcases:
         self.process_directory(self.root_node, abspath)
         #tree.bind("<Double-1>", self.OnDoubleClick)
         #tree.bind("<Double-1>",self.running)
-        self.master.grid_columnconfigure(0,weight=1)
-        #master.grid_columnconfigure(1,weight=1)
-        #master.columnconfigure(0,weight=1)
-        master.rowconfigure(2,weight=0)
-        master.rowconfigure(0,minsize=20,weight=0)
-        master.rowconfigure(1,minsize=20,weight=0)
-        master.rowconfigure(3,weight=1)
-        master.columnconfigure(3,minsize=20,weight=0)
-        master.columnconfigure(4,minsize=20,weight=1)
-        master.columnconfigure(5,minsize=20,weight=1)
-        master.columnconfigure(6,minsize=20,weight=1)
+        #self.master.grid_columnconfigure(0,weight=1)
+        master.grid_columnconfigure(1,weight=1)
+        #master.columnconfigure(0,weight=0)
+        master.rowconfigure(2,weight=1)
+        master.rowconfigure(0,weight=1)
+        master.rowconfigure(1,weight=0)
+        master.rowconfigure(3,weight=3)
+        #master.columnconfigure(3,minsize=20,weight=0)
+        master.rowconfigure(4,minsize=20,weight=0)
+        master.rowconfigure(5,minsize=20,weight=1)
+        master.rowconfigure(6,minsize=20,weight=0)
         #tacread = tree.insert("",0,"tacread",text = "tacread")
         scrollbar1 = Scrollbar(master,orient = "vertical")
-        self.listbox1 = Listbox(master,yscrollcommand = scrollbar1.set)
+        #self.listbox1 = Listbox(master,yscrollcommand = scrollbar1.set)
         #self.listbox1= listbox1
-        self.listbox1.grid(row=3,column=1,sticky=NSEW,columnspan=8)
-        scrollbar1 = Scrollbar(master,orient = "vertical",command=self.listbox1.yview)
-        scrollbar1.config(command = self.listbox1.yview)
-        scrollbar1.grid(row=3,column=9,sticky=NSEW)
+        #self.listbox1.grid(row=3,column=1,sticky=NSEW,columnspan=8)
+        scrollbar1 = Scrollbar(master,orient = "vertical",command=self.tree2.yview)
+        scrollbar1.config(command = self.tree2.yview)
+        scrollbar1.grid(row=0,column=2,sticky=NSEW,rowspan=8)
 	master.popup_menu = Menu(master)
         master.popup_menu.add_command(label="Add Menu",command=lambda:self.addmenu(master))
         master.popup_menu.add_command(label="Add Testcase",command=lambda:self.addtestcase(master))
@@ -422,8 +430,16 @@ class Record_Testcases:
         self.item_iid = self.tree.selection()[0]
 
     def addmenu(self,master):
-        self.Labelx["text"] = "Enter the name of submenu" 
+        #self.Labelx["text"] = "Enter the name of submenu" 
         #self.pop.destroy()
+        self.root4=Toplevel(self.master)
+        label0 = Label(self.root4,text="Please enter the name of menu").grid(row=0,column=0,columnspan=2)
+        label1 = Label(self.root4,text="Name").grid(row=1,column=0,sticky=E)
+        self.Entry5=Entry(self.root4)
+        self.Entry5.grid(row=1,column=1)
+        self.root4.grid_rowconfigure(2, minsize=20)
+        button4 = Button(self.root4, text="OK", command=lambda:self.abcd(),height=1,width=8).grid(row=3,column=0,columnspan=2)
+        #---------------------------------------
         text1 = ""
         item_iid = self.item_iid
         path = self.tree.item(item_iid,'text')
@@ -433,8 +449,8 @@ class Record_Testcases:
              text1 = path +"/"  +text1
              item_iid = self.tree.parent(item_iid)
              path =  self.tree.item(item_iid,'text')
-        self.Entry["state"] = "normal"
-        self.button7["state"] = "normal"
+        #self.Entry["state"] = "normal"
+        #self.button7["state"] = "normal"
         self.finalpath = os.getcwd()+"/" +text1
        #print os.path.abspath(os.path.dirname(__path__))
         '''parent_iid = self.tree.parent(self.item_iid)[0]
@@ -456,16 +472,17 @@ class Record_Testcases:
                 tkMessageBox.showinfo('Error: ',"This folder already exists")'''
     def abcd(self):
         #print self.finalpath
-      if self.Entry.get() =="":
+      if self.Entry5.get() =="":
         tkMessageBox.showinfo('Error: ',"please enter a valid name",parent=self.master)
       else:     
-        path = self.finalpath+self.Entry.get()
+        path = self.finalpath+self.Entry5.get()
         if not os.path.exists(path):
              print path
              os.makedirs(path)
-             self.Entry.delete(0,END)
-             self.Entry["state"] = DISABLED
-             self.button7["state"] = DISABLED
+             self.root4.destroy()
+             #self.Entry.delete(0,END)
+             #self.Entry["state"] = DISABLED
+             #self.button7["state"] = DISABLED
         else:
              tkMessageBox.showinfo('Error: ',"this folder already exists",parent=self.master)
         self.tree.delete(*self.tree.get_children())
@@ -476,27 +493,28 @@ class Record_Testcases:
     
 	
     def recording1(self):
-     if self.Entry.get() =="":
+     if self.Entry6.get() =="":
         tkMessageBox.showinfo('Error: ',"please enter a valid name",parent=self.master)
      else:
-	self.button8["state"]=DISABLED
-        path = self.finalpath1+self.Entry.get()+".txt"
+	#self.button8["state"]=DISABLED
+        path = self.finalpath1+self.Entry6.get()+".txt"
         print path
         if not os.path.exists(path):
              print path
              #os.makedirs(path)
              f = open(path,'w')
              f.close()
-             self.Entry.delete(0,END)
-             self.Entry["state"] = DISABLED
-             self.button7["state"] = DISABLED
+             self.root5.destroy()
+             #self.Entry.delete(0,END)
+             #self.Entry["state"] = DISABLED
+             self.button9["state"] ="normal"
         else:
              tkMessageBox.showinfo('Error: ',"this folder already exists",parent=self.master)
         self.tree.delete(*self.tree.get_children())
         abspath = os.path.abspath("tacread")
         self.root_node = self.tree.insert('', 'end', text="tacread", open=True)
         self.process_directory(self.root_node, abspath)
-        self.listbox1.insert(0,path)
+        #self.listbox1.insert(0,path)
 	print 'lll'
 	self.qu=multiprocessing.Queue()
 	self.stop_but=multiprocessing.Queue()
@@ -525,28 +543,42 @@ class Record_Testcases:
 				print 'Error aagaya'
 				error1=self.rec_error.get()
 				if "'NoneType' object has no attribute 'send'" in error1:
-					tkMessageBox.showinfo('Error.Probably connection not yet established. Details: ',str(error1),parent=self.master)
+					tkMessageBox.showinfo('Error.Probably connection not established. Details: ',str(error1),parent=self.master)
 				elif "Broken pipe" in error1:
 					tkMessageBox.showinfo('Error: ',"CONNECTION BROKEN,CONNECT AGAIN\n"+str(error1),parent=self.master)
 				else:
 					tkMessageBox.showinfo('Error: ',str(error1),parent=self.master)
 				return		#out of qu_check	
-			if self.stop_but.qsize()!=0 :
+			if self.stop_but.qsize()!=0:
 				print 'stopped'
-				self.listbox1.insert(END,"FINISHED RECORDING, TESTCASE GENERATED.")	
-				self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
-                        	self.listbox1.see(END)
+                                tkMessageBox.showinfo('end',"FINISHED RECORDING, TESTCASE GENERATED.",parent=self.master)
+				#self.listbox1.insert(END,"FINISHED RECORDING, TESTCASE GENERATED.")	
+				#self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
+                        	#self.listbox1.see(END)
                                 p=1
 				return		#out of qu_check
-			self.listbox1.insert(END,self.qu.get())	
-			self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
-                        self.listbox1.see(END)
+			po=self.qu.get()
+		        #self.tree2.insert('',"end",text='',values=('',''))
+                        self.tree2.insert('',"end",text='',values=(po[0],po[1]))
+                        self.tree2.update_idletasks()
+			#self.listbox1.insert(END,self.qu.get())	
+			#self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
+                        #self.listbox1.see(END)
 		
 		
-                self.master.after(50,self.qu_check)
+                self.master.after(500,self.qu_check)
                 
     def addtestcase(self,master):
-        self.Labelx["text"] = "Enter the name of Testcase" 
+        
+        self.root5=Toplevel(self.master)
+        label0 = Label(self.root5,text="Please enter the name of Testcase").grid(row=0,column=0,columnspan=2)
+        label1 = Label(self.root5,text="Name").grid(row=1,column=0,sticky=E)
+        self.Entry6=Entry(self.root5)
+        self.Entry6.grid(row=1,column=1)
+        self.root5.grid_rowconfigure(2, minsize=20)
+        button4 = Button(self.root5, text="Start Recording", command=lambda:self.recording1(),height=1).grid(row=3,column=0,columnspan=2)
+        #self.Labelx["text"] = "Enter the name of Testcase"
+        #-----------------------------------------------------------------------
         #master.popup_menu.destroy()
         text1 = ""
         item_iid = self.item_iid
@@ -557,11 +589,11 @@ class Record_Testcases:
              text1 = path +"/"  +text1
              item_iid = self.tree.parent(item_iid)
              path =  self.tree.item(item_iid,'text')
-        self.Entry["state"] = "normal"
+        #self.Entry["state"] = "normal"
         self.finalpath1 = os.getcwd()+"/"+text1
-        self.Entry["state"] = "normal"
-        self.button8["state"] = "normal"
-        self.button9["state"] = "normal"
+        #self.Entry["state"] = "normal"
+        #self.button8["state"] = "normal"
+        #self.button9["state"] = "normal"
 
     def process_directory(self, parent, path):
         for p in os.listdir(path):
@@ -573,7 +605,7 @@ class Record_Testcases:
     	
     def stop(self):
 	
-        self.stop_but.put("stop")
+        self.stop_but.put("stopped...")
 	time.sleep(4)
         print "Recording stopped, processing and generating testcase...."
 	

@@ -66,7 +66,7 @@ def recordp(self,path,s,qu,stop_but):
 	'''
 	blink.append('o')
 	
-	
+	no=1
 	while qwer==0:
 		
 		if stop_but.qsize()!=0:
@@ -92,11 +92,13 @@ def recordp(self,path,s,qu,stop_but):
 		#this is necessary as the last few BRF data lines in the log_file after the last keyboard event line is also required.
 		line=s.recv(1024)
 		print 'line;',line
-		testcase.append(str(line))
+		if line!='nothing': testcase.append(str(line))
 		
 		if ('BRF data' in line):
-			blink.append(line)	
-                        
+			blink.append(line)
+			parsed=line.split("[display-svc] [debug] BRF data :")[-1]
+			print parsed	
+                        qu.put((no,parsed,''))
 			
 		elif ('Keyboard event received' in line):
 			ji=ex(line)
@@ -108,13 +110,14 @@ def recordp(self,path,s,qu,stop_but):
 					print_ln=print_ln+" + "+str(i)
 				else:
 					print_ln=str(i)
-			print_ln="Keystrokes received: " + print_ln
+			
 			print print_ln
-			qu.put(print_ln)
+			qu.put(('','',print_ln))
 			
 			#self.listbox1.insert(tk.END,print_ln+'\n')
 			#self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
-		
+		elif line=='nothing':	#not actually necessary, just to let you know about nothing
+			continue
 
 	for i in range(len(blink)-1): #adding timedifference
 		if str(type(blink[i]))=="<type 'list'>":

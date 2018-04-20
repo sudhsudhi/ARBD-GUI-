@@ -2,7 +2,7 @@ import os,signal,uinput
  
 import sys,signal
 import time,datetime
-import subprocess
+import subprocess,multiprocessing
 import socket
 from subprocess import Popen,call,PIPE
 #p2.stdout.readline not lines
@@ -216,7 +216,12 @@ def follow(thefile):
             continue
 	    		
         yield line
-
+def wow(equ1,p2):
+	for line in iter(lambda: p2.stdout.readline(),''):
+		if ('Keyboard event' in line) or ("BRF data" in line) :
+			print 'wow: '+line
+			equ1.put(line)
+	
 def recordserver(s,c):
 
 		#grep might interfer with stout.read so don't use grep		
@@ -243,10 +248,23 @@ def recordserver(s,c):
 		
 		lenl=0
 		
-    		for line in iter(lambda: p2.stdout.readline(),''):
-			if ('Keyboard event' in line) or ("BRF data" in line):			
-				msg=c.recv(1024)
-				#print line
+		equ1=multiprocessing.Queue()
+	
+		et1=multiprocessing.Process(target=wow,args=(equ1,p2))
+        	et1.start()
+		#a separate thread(of multiprocessing) and a queue is used so that the below loop continues even if nothing is coming into logfile
+		
+    		while True:
+			msg=c.recv(1024)
+			if equ1.qsize()==0:
+				line='nothing'
+			else:
+				line=str(equ1.get())
+
+
+			if ('Keyboard event' in line) or ("BRF data" in line) or (line=='nothing'):			
+				
+				
 				if msg=='continue':
 					#print line
 					
@@ -255,7 +273,8 @@ def recordserver(s,c):
 				if msg=='stop':
 					p2.kill()	 #stops recording
 					print 'os'					
-					c.send('recording stopped')	
+					c.send('recording stopped')
+					et1.join()	
 					break
 		
 def exeserver(s,c):
@@ -354,6 +373,6 @@ def exeserver(s,c):
 
 
 host= "192.168.7.2"
-port=3849
+port=4676
 password= ".Book40"
 server(host,port,password)
