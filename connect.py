@@ -1,6 +1,6 @@
 import paramiko,os,time
 
-#sudo kill pid
+
 
 
 f =open('disconn.txt','w')

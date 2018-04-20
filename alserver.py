@@ -332,11 +332,11 @@ def exeserver(s,c):
 
 		#also I have changed the code such that alserver will wait for at max 5 sec after execution of keyboard events , to get data from logfile.
 		current1=datetime.datetime.now()		
-		maxt=current1+datetime.timedelta(0,5,0,0)
+		maxt=current1+datetime.timedelta(0,1,0,0)
 					#datetime.timedelta([days[, seconds[, microseconds[, milliseconds[, minutes[, hours[, weeks]]]]]]]
 		
 		for line in iter(lambda: pp2.stdout.readline(),''):
-			if datetime.datetime.now().time() > maxt.time():	#max 5 s condition
+			if datetime.datetime.now().time() > maxt.time():	#max 1 s condition
 						#print datetime.datetime.now().time() > nxt.time()
 						print 'max crossed'
 						break
@@ -374,6 +374,6 @@ def exeserver(s,c):
 
 
 host= "192.168.7.2"
-port=4555
+port=2250
 password= ".Book40"
 server(host,port,password)

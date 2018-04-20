@@ -365,6 +365,7 @@ def executep(self,s,testcase_name,equ1,equ2,equ3):
 					sendlist.append(line)
 					executed.append(line)
 		print "Finished executing the testcase:'" + testcase_name
+		s.send("tervar=1")
 		equ3.put('finished')
 	
 	

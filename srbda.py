@@ -46,11 +46,11 @@ class mainclass():
         #button2.place(relx=0.6,rely=0.5,anchor="center")
         #master.rowconfigure(0,weight=1)
         #master.columnconfigure(0,weight=1)
-        self.button2 = ttk.Button(master, text="Record", command=lambda:self.Record())
+        self.button2 = ttk.Button(master, text="Record", command=lambda:self.Record(),state= DISABLED)
         self.button2.grid(row=3,column=5)
         #self.button2.place(relx=0.4,rely=0.5,anchor="center")
         #button2.lower(master.frame)
-        self.button3 = ttk.Button(master, text="Excecute", command=lambda:self.execute_testcase())
+        self.button3 = ttk.Button(master, text="Execute ", command=lambda:self.execute_testcase(),state= DISABLED)
         self.button3.grid(row=3,column=7)
         #self.button3.place(relx=0.6,rely=0.5,anchor="center")
         #button3.lower(master.frame)
@@ -136,7 +136,7 @@ class mainclass():
                 self.button4["state"]='normal'
                 self.button1["state"]='disabled'
                 #label10.destroy()
-                self.label11 = Label(self.master,text="Connected",bg="white",fg="black",font=  ("Arial","15","bold italic"))
+                self.label11 = Label(self.master,text="	Device Connected",bg="white",fg="black",font=  ("Arial","15","bold italic"))
                 self.label11.grid(row=0,column=1,columnspan=5)
 		self.socc=p[1]
 		self.conn_proc=p[2]
@@ -154,9 +154,10 @@ class mainclass():
 	#handle socket closing also
 	#take users password
 	
-        self.button1["text"]="Disconnect"
-        self.button2["state"]= "snormal"
-        self.button3["state"]="normal"
+        
+        self.button2["state"]= "disabled"
+        self.button3["state"]="disabled"
+	self.button4["state"]="disabled"
 	f =open('disconn.txt','r')
 	k=f.readline()
 	pid=int(k.rstrip())
@@ -164,7 +165,7 @@ class mainclass():
 	self.button1["state"]='normal'
 	
 	tkMessageBox.showinfo('Info.','DISCONNECTED.',parent=self.master) 		#sudhi
-	
+	self.label11.destroy()
 	#sudhi
 
     def Update(self):
@@ -184,6 +185,7 @@ class mainclass():
 
     def execute_testcase(self):
         self.root4=Toplevel(self.master,bg="white")
+	
         root4 = self.root4
         master = root4
         self.tree1 = ttk.Treeview(root4)
@@ -196,11 +198,11 @@ class mainclass():
         self.root_node = tree.insert('', 'end', text="tacread", open=True)
         self.process_directory(self.root_node, abspath)
         #self.table(root4)
-	botton12 = Button(master, text="RUN", command=lambda:self.run(),height=2,width=15,bg="Skyblue")
+	botton12 = Button(master, text="Execute testcase", command=lambda:self.run(),height=2,width=15,bg="Skyblue")
         botton12.grid(row=1,column=0)
         #button13 = self.botton19
-        botton13 = Button(master, text="STOP", command="",height=2,width=15,bg= "Skyblue")
-        botton13.grid(row=2,column=0)
+        #botton13 = Button(master, text="STOP", command="",height=2,width=15,bg= "Skyblue")
+        #botton13.grid(row=2,column=0)
         #button13 =self.button20
         style = ttk.Style()
         #style.configure(".", font=('Helvetica', 12))
@@ -243,7 +245,7 @@ class mainclass():
 	
           #--------------------------------------------------
         root4.popup_menu = Menu(root4) 
-        root4.popup_menu.add_command(label="Excecute",command=lambda:self.excecuter())
+        root4.popup_menu.add_command(label="Load testcases",command=lambda:self.excecuter())
         tree.bind("<Button-3>",self.popup) 
     def popup(self, event): 
         iid = self.tree1.identify_row(event.y) 
@@ -300,10 +302,10 @@ class mainclass():
 
 					k=str(brfl[i]).split(" [display-svc] [debug] BRF data :")[-1].strip('\n')
 					ibrf+= k+" / "
-					self.tree2.insert('',"end",text='',values=(ibrf,'',''))
+					
                                         print ibrf
                                         #self.tree2.update_idletasks()	
-											
+				self.treeview.insert('',"end",text='',values=(ibrf,'',''))							
 			elif not('o' in line):
 		
 				b2=len(brfl)-1
@@ -318,11 +320,12 @@ class mainclass():
 					j_1=line[0].split("Keyboard event received: ")[-1][:-1]  #refer ex2 in executer6 for details
 					self.treeview.insert('',"end",text=j_1,values=('','',''))
 					sendlist.append(line)
-        #button12["state"] = "normal"
+	self.treeview.insert('',"end","",values=('-------------------END OF TESTCASE---------------','',''))        
+	#button12["state"] = "normal"
 					
     def run(self):
         self.variable = "initial"
-        self.keylists = self.tree2.get_children()
+        self.keylists = self.treeview.get_children()
         self.loop = 0
         self.equ1=multiprocessing.Queue()
 	self.equ2=multiprocessing.Queue()
@@ -348,6 +351,7 @@ class mainclass():
 			if self.equ1.qsize()!=0:
 				p=self.equ1.get()
 				print 'p:'+str(p)
+				
                                 if p[3] =="Failed":
                                        self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]),tags ="fail")
                                 elif p[3] =="Passed":
@@ -355,11 +359,12 @@ class mainclass():
 				else:
 				       self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]))
                                 #self.treeview.yview_moveto(1)
-                                
                                 self.loop +=1
+                                
 				self.treeview.update_idletasks()     #my line 
 		if self.equ3.qsize()!=0:
 			if self.equ1.qsize()!=0:
+				
 				p=self.equ1.get()
 				print 'p:'+str(p)
                                 #self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]))
@@ -370,9 +375,9 @@ class mainclass():
 				else:
 				       self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]))
                                 #self.treeview.yview_moveto(1)
-                                self.loop+=1
+                                
 				self.treeview.update_idletasks()     #my line 
-
+				self.loop+=1
 			equ3v=self.equ3.get()
 			
 			if equ3v =='wait':
@@ -622,6 +627,7 @@ class Record_Testcases:
         #self.Entry["state"] = "normal"
         #self.button7["state"] = "normal"
         self.finalpath = os.getcwd()+"/" +text1
+			#sudhi
        #print os.path.abspath(os.path.dirname(__path__))
         '''parent_iid = self.tree.parent(self.item_iid)[0]
         text3= (self.tree.item(self.item_iid)['text'])
@@ -723,7 +729,7 @@ class Record_Testcases:
                 p=0
 		#check qsize and empty documentation. qsize gices approx size.
 		#most probably there is no problem in qsize, it works fine
-		print 'chal'
+		
 		while self.qu.qsize()!=0 :
 			
 			po=self.qu.get()
@@ -736,7 +742,7 @@ class Record_Testcases:
 			#self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
                         #self.listbox1.see(END)
 		
-		print str(self.stop_but.qsize()) +'but_size'
+		
 		if not self.rec_error.empty():
 				#show error
 				print 'Error aagaya'
@@ -764,9 +770,12 @@ class Record_Testcases:
         self.root5=Toplevel(self.master)
         label0 = Label(self.root5,text="Please enter the name of Testcase").grid(row=0,column=0,columnspan=2)
         label1 = Label(self.root5,text="Name").grid(row=1,column=0,sticky=E)
+	self.center(self.root5)			#sudhi
         self.Entry6=Entry(self.root5)
         self.Entry6.grid(row=1,column=1)
         self.root5.grid_rowconfigure(2, minsize=20)
+
+	
         button4 = Button(self.root5, text="Start Recording", command=lambda:self.recording1(),height=1).grid(row=3,column=0,columnspan=2)
         #self.Labelx["text"] = "Enter the name of Testcase"
         #-----------------------------------------------------------------------
@@ -785,7 +794,7 @@ class Record_Testcases:
         #self.Entry["state"] = "normal"
         #self.button8["state"] = "normal"
         #self.button9["state"] = "normal"
-
+	
     def process_directory(self, parent, path):
         for p in os.listdir(path):
             abspath = os.path.join(path, p)
@@ -793,12 +802,12 @@ class Record_Testcases:
             oid = self.tree.insert(parent, 'end', text=p, open=False)
             if isdir:
                 self.process_directory(oid, abspath)
-    	
+    
     def stop(self):
 	
         self.stop_but.put("stopped...")
 	time.sleep(4)
-        print 'Recording stopped, processing and generating testcase....'
+       
 	
 	self.rt1.join()
         print "Joined"
