@@ -48,7 +48,7 @@ def recordp(self,path,s,qu,stop_but):
 	
 	testcase_name=path
 	
-	qu.put("Recording started,you can start giving keystrokes...")
+	
 	print "Recording started,you can start giving keystrokes..." 	
 
 	
@@ -70,12 +70,13 @@ def recordp(self,path,s,qu,stop_but):
 	while qwer==0:
 		
 		if stop_but.qsize()!=0:
+
 			u_input='stop' 
 			                          
 		else:
 			u_input='blah blah'
 
-		print 'u_input;'+u_input
+		
 		if u_input=='stop':
 			s.send('stop')	
 			f=s.recv(1024)	
@@ -86,12 +87,12 @@ def recordp(self,path,s,qu,stop_but):
 		else:
 			
 			s.send('continue')
-			print 'h is here!'
+			
 
 		#stop_button.py waits for 2 seconds after recieving the stop command to actually send stop to alclient.py
 		#this is necessary as the last few BRF data lines in the log_file after the last keyboard event line is also required.
 		line=s.recv(1024)
-		print 'line;',line
+		
 		if line!='nothing': testcase.append(str(line))
 		
 		if ('BRF data' in line):
@@ -99,6 +100,7 @@ def recordp(self,path,s,qu,stop_but):
 			parsed=line.split("[display-svc] [debug] BRF data :")[-1]
 			print parsed	
                         qu.put((no,parsed,''))
+			no+=1
 			
 		elif ('Keyboard event received' in line):
 			ji=ex(line)
@@ -116,6 +118,7 @@ def recordp(self,path,s,qu,stop_but):
 			
 			#self.listbox1.insert(tk.END,print_ln+'\n')
 			#self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
+
 		elif line=='nothing':	#not actually necessary, just to let you know about nothing
 			continue
 
@@ -202,7 +205,7 @@ def conn_send(userid,password,Ipaddress,Portnumber,shlf):
 		f.close()
 		cmd1='python connect.py'
 		p1 = subprocess.Popen(cmd1, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True)
-		time.sleep(5)
+		time.sleep(3)
 		'''		
 		i=10
 		for line in iter(lambda: p1.stderr.readline(),''):
@@ -281,6 +284,7 @@ def executep(self,s,testcase_name,equ1,equ2,equ3):
 		brfl=[]
 		
 		b2=0
+	
 		for line in ilink:
 			if "BRF data" in line:
 				brfl.append(line)

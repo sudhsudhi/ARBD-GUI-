@@ -9,6 +9,7 @@ from subprocess import Popen,call,PIPE
 #make sure to remove all print lines in final
 
 print 'pid:'+ str(os.getpid())
+
 global Keyboard
 Keyboard = uinput.Device([uinput.KEY_RESERVED, uinput.KEY_1, uinput.KEY_2, uinput.KEY_3, uinput.KEY_4, uinput.KEY_5, uinput.KEY_6
 ,    uinput.KEY_7 #8
@@ -373,6 +374,6 @@ def exeserver(s,c):
 
 
 host= "192.168.7.2"
-port=4676
+port=4555
 password= ".Book40"
 server(host,port,password)

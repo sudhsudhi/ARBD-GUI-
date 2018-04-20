@@ -1,4 +1,4 @@
-import os
+import os,signal
 import time
 import multiprocessing
 import tkMessageBox
@@ -7,6 +7,7 @@ from Tkinter import *
 import ttk
 from alclient import conn_send,execute,recording
 from subprocess import Popen,call,PIPE
+import subprocess
 from executer6 import ex,ex2,di,timeparse,linker,timedifference
 from random import randint
 abc = None
@@ -23,6 +24,7 @@ i=10
 
 class mainclass():
     def __init__(self,master):
+        global button12,button13
         #self.text = tk.StringVar()
         #tk.Tk.__init__(self,master,*args,**kwargs)
         self.master = master
@@ -36,7 +38,7 @@ class mainclass():
         #label1.place(relx=0.5,rely=0.4,anchor="center")
         self.button1 = ttk.Button(master, text="Connect", command=lambda:self.newone())
         self.button1.grid(row=3,column=1)
-        self.button4 = ttk.Button(master, text="Disconnect", command="",state= DISABLED)	#end nimbal's process at disconnect
+        self.button4 = ttk.Button(master, text="Disconnect", command=lambda:self.disconnect(),state= DISABLED)	#end nimbal's process at disconnect
         self.button4.grid(row=3,column=3)
         #self.text.set("connect")
         #self.button1.place(relx=0.5,rely=0.5,anchor="center")
@@ -134,13 +136,14 @@ class mainclass():
                 self.button4["state"]='normal'
                 self.button1["state"]='disabled'
                 #label10.destroy()
-                label11 = Label(self.master,text="Connected",bg="white",fg="black",font=  ("Arial","15","bold italic"))
-                label11.grid(row=0,column=1,columnspan=5)
+                self.label11 = Label(self.master,text="Connected",bg="white",fg="black",font=  ("Arial","15","bold italic"))
+                self.label11.grid(row=0,column=1,columnspan=5)
 		self.socc=p[1]
 		self.conn_proc=p[2]
 		global abc
                 abc=p[1]     
                 print abc , type(abc)
+		self.proc=p[2]
          
 	else:
 		tkMessageBox.showinfo('Error: ',p)
@@ -148,11 +151,21 @@ class mainclass():
 		
     def disconnect(self):
         #self.text.set("Disconnect")
+	#handle socket closing also
+	#take users password
+	
         self.button1["text"]="Disconnect"
         self.button2["state"]= "snormal"
         self.button3["state"]="normal"
-        Labelx = Label(self.master,text="Successfully connected to arbd",bg="white")
-        Labelx.place(relx=0.8,rely=0.1)
+	f =open('disconn.txt','r')
+	k=f.readline()
+	pid=int(k.rstrip())
+        os.kill(pid, signal.SIGTERM)
+	self.button1["state"]='normal'
+	
+	tkMessageBox.showinfo('Info.','DISCONNECTED.',parent=self.master) 		#sudhi
+	
+	#sudhi
 
     def Update(self):
         userid= self.Entry1.get()
@@ -172,6 +185,7 @@ class mainclass():
     def execute_testcase(self):
         self.root4=Toplevel(self.master,bg="white")
         root4 = self.root4
+        master = root4
         self.tree1 = ttk.Treeview(root4)
         tree = self.tree1
         tree.grid(row=0,column=0,sticky="nsew")
@@ -181,8 +195,50 @@ class mainclass():
         abspath = os.path.abspath("tacread")
         self.root_node = tree.insert('', 'end', text="tacread", open=True)
         self.process_directory(self.root_node, abspath)
-        self.table(root4)
-	
+        #self.table(root4)
+	botton12 = Button(master, text="RUN", command=lambda:self.run(),height=2,width=15,bg="Skyblue")
+        botton12.grid(row=1,column=0)
+        #button13 = self.botton19
+        botton13 = Button(master, text="STOP", command="",height=2,width=15,bg= "Skyblue")
+        botton13.grid(row=2,column=0)
+        #button13 =self.button20
+        style = ttk.Style()
+        #style.configure(".", font=('Helvetica', 12))
+        #style.configure("Treeview", foreground='red')
+        style.configure("Treeview.Heading", foreground='Black',background="SkyBlue")
+        self.tree2 = ttk.Treeview( master, columns=('KeyStrokes','Ideal Output','Received output','Pass/fail'))
+        #self.tree2.heading('#0', text='Main heading')
+        #self.tree2.heading('#1', text='heading')
+        #self.tree2.heading('#2', text='sub heading')
+        self.tree2.heading('#3', text='Pass/fail')
+        self.tree2.heading('#0', text='KeyStrokes')
+        self.tree2.heading('#1', text='Ideal Output')
+        self.tree2.heading('#2', text='Received output')
+        self.tree2.column('#2',width=220, stretch=False)
+        self.tree2.column('#1',width=350, stretch=False)
+        self.tree2.column('#0',width=220, stretch=False)
+        self.tree2.column('#3',width=220, stretch=False)
+        #self.tree2.column('#4',width=150, stretch=False)
+        ##self.tree2.column('#5',width=150, stretch=False)
+        #self.tree2.column('#6',width=150, stretch=False)
+        self.tree2.grid(row=0,column=1, columnspan=7,rowspan=3, sticky='nsew')
+        #self.tree.pack()
+        self.treeview = self.tree2
+        scrollbar1=Scrollbar(master,command=self.tree2.yview)
+        scrollbar1.grid(row=0,column=8,rowspan=3,sticky=N+S)
+        self.treeview.configure(yscrollcommand=scrollbar1.set)
+        master.rowconfigure(0,weight=1)
+        master.columnconfigure(0,weight=1)
+        master.columnconfigure(1,weight=1)
+        master.columnconfigure(2,weight=1)
+        master.columnconfigure(3,weight=1)
+        master.columnconfigure(4,weight=1)
+        master.columnconfigure(5,weight=1)
+        #scrollbar1.pack(side=RIGHT)
+        #self.loadtable1()
+        
+        self.treeview.tag_configure("fail",background="coral1")
+        self.treeview.tag_configure("pass",background="DarkOliveGreen1")
 	
 	
           #--------------------------------------------------
@@ -219,7 +275,56 @@ class mainclass():
              path =  self.tree1.item(item_iid,'text')
         self.finalpath4 = os.getcwd()+"/"+text1[:-1]
 	#_____________________________
-	self.equ1=multiprocessing.Queue()
+	
+	f= open(self.finalpath4,'r') 
+	ideal_link=f.readlines()[0]
+	#print ideal_link
+	ilink=eval(ideal_link)
+	sendlist=[]
+	
+	brfl=[]
+	b2=0
+	
+	for line in ilink:
+			if "BRF data" in line:
+		
+				brfl.append(line)
+				
+				if len(sendlist)==0:
+					continue
+				sendlist=[]
+				
+				ibrf = ''
+				print str(b2)+'<b2',str(len(brfl))
+				for i in range(b2,len(brfl)):
+
+					k=str(brfl[i]).split(" [display-svc] [debug] BRF data :")[-1].strip('\n')
+					ibrf+= k+" / "
+					self.tree2.insert('',"end",text='',values=(ibrf,'',''))
+                                        print ibrf
+                                        #self.tree2.update_idletasks()	
+											
+			elif not('o' in line):
+		
+				b2=len(brfl)-1
+				#no_key is not sent to alserver
+				if line[-2]==['no_key']:
+									
+					self.treeview.insert('',"end",text='no_key',values=('','',''))
+					print 'no_key_received'
+				else:
+				
+				
+					j_1=line[0].split("Keyboard event received: ")[-1][:-1]  #refer ex2 in executer6 for details
+					self.treeview.insert('',"end",text=j_1,values=('','',''))
+					sendlist.append(line)
+        #button12["state"] = "normal"
+					
+    def run(self):
+        self.variable = "initial"
+        self.keylists = self.tree2.get_children()
+        self.loop = 0
+        self.equ1=multiprocessing.Queue()
 	self.equ2=multiprocessing.Queue()
 	self.equ3=multiprocessing.Queue()
 	self.exe_error=multiprocessing.Queue()	
@@ -227,7 +332,9 @@ class mainclass():
 	self.et1=multiprocessing.Process(target=execute,args=(self,abc,self.finalpath4,self.equ1,self.equ2,self.equ3,self.exe_error))
         self.et1.start()
 	self.equ_check()
+    	
     def equ_check(self):
+                #print self.equ3.qsize()
 		if self.exe_error.qsize()!=0:
 				#show error
 				print 'Error aagaya'
@@ -241,44 +348,104 @@ class mainclass():
 			if self.equ1.qsize()!=0:
 				p=self.equ1.get()
 				print 'p:'+str(p)
-                                self.treeview.insert('',"end",text=p[0],values=(p[1],p[2],p[3]))
+                                if p[3] =="Failed":
+                                       self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]),tags ="fail")
+                                elif p[3] =="Passed":
+                                       self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]),tags ="pass")
+				else:
+				       self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]))
+                                #self.treeview.yview_moveto(1)
+                                
+                                self.loop +=1
 				self.treeview.update_idletasks()     #my line 
 		if self.equ3.qsize()!=0:
 			if self.equ1.qsize()!=0:
 				p=self.equ1.get()
 				print 'p:'+str(p)
-                                self.treeview.insert('',"end",text=p[0],values=(p[1],p[2],p[3]))
+                                #self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]))
+                                if p[3] =="Failed":
+                                       self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]),tags ="fail")
+                                elif p[3] =="Passed":
+                                       self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]),tags ="pass")
+				else:
+				       self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]))
+                                #self.treeview.yview_moveto(1)
+                                self.loop+=1
 				self.treeview.update_idletasks()     #my line 
 
 			equ3v=self.equ3.get()
-			print 'equ3v:'+equ3v
+			
 			if equ3v =='wait':
-				print 'unmatched '
-		                 
-		                #self.treeview.see(END)                                  #my line 
-				print 'mesgboxing'
-				mesgbox =   tkMessageBox.askyesno("Error","BRF data didn't match! Continue execution or stop?",parent=self.root4)
-				if mesgbox:
-					self.equ2.put('c')
-				else:
+				 
 				
-					self.equ2.put('s')
-					self.treeview.insert('',"end",text='',values=('','',''))
-					self.treeview.insert('',"end",text='',values=('','',''))
-					self.treeview.insert('',"end",text='',values=('','Execution stopped by user' ,''))
-					self.treeview.update_idletasks()
-					self.et1.join()
+				
+								
+				if self.variable=="stop":
 					return
+				elif self.variable=="waiting":
+					self.equ3.put('wait')
+				elif self.variable == "initial":
+					print 'unmatched '
+				         
+				        #self.treeview.see(END)                                  #my line 
+					print 'mesgboxing'
+					#mesgbox =   tkMessageBox.askyesno("Error","BRF data didn't match! Continue execution or stop?",parent=self.root4)
+		                        self.root89 = Toplevel(self.root4)
+		                        root89 = self.root89
+		                        label0 = Label(root89,text="BRF data didn't match! Continue execution or stop?").grid(row=0,column=0,columnspan=3)
+		                        botton12 = Button(root89, text="continue", command=lambda:self.con(),height=2,width=15).grid(row=2,column=0)
+		                        botton12 = Button(root89, text="stop", command=lambda:self.sto(),height=2,width=15).grid(row=2,column=2)
+		                        root89.rowconfigure(1,minsize=10)
+		                        root89.columnconfigure(1,minsize=10)
+                                         #----------------------------
+                                        self.center(root89)
+					#---------------------------------
+					self.variable="waiting" 
+					self.equ3.put('wait')
 			if equ3v=='finished':
-					self.treeview.insert('',"end",text='',values=('','',''))
-					self.treeview.insert('',"end",text='',values=('','',''))
-					self.treeview.insert('',"end",text='',values=('','',''))
-					self.treeview.insert('',"end",text='',values=('','Finished execution',''))
-					self.treeview.update_idletasks()
+					
+					#self.treeview.insert('',"end",text='',values=('','Finished execution',''))
+					tkMessageBox.showinfo("info","Finished excecution",parent=self.root4)
+                                        self.loop=0
 					self.et1.join()
 					print "Thread joined, finished execution.."	
 					return 														
-                self.master.after(100,self.equ_check)
+                self.master.after(50,self.equ_check)
+    def center(self,win):
+	    """
+	    centers a tkinter window
+	    :param win: the root or Toplevel window to center
+	    """
+	    win.update_idletasks()
+	    width = win.winfo_width()
+	    frm_width = win.winfo_rootx() - win.winfo_x()
+	    win_width = width + 2 * frm_width
+	    height = win.winfo_height()
+	    titlebar_height = win.winfo_rooty() - win.winfo_y()
+	    win_height = height + titlebar_height + frm_width
+	    x = win.winfo_screenwidth() // 2 - win_width // 2
+	    y = win.winfo_screenheight() // 2 - win_height // 2
+	    win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+	    win.deiconify()
+
+    def con(self):
+        
+	self.equ2.put('c')
+	self.variable="initial"
+	if self.equ3.qsize()!=0:
+		k=self.equ3.get() # to empty equ3
+	self.root89.destroy()
+    def sto(self):
+        self.variable = "stop"
+	self.root89.destroy()
+	self.equ2.put('s')
+				
+	#self.treeview.insert('',"end",text='',values=('','Execution stopped by user' ,''))
+        tkMessageBox.showinfo("info","Execution stopped by user",parent=self.root4)
+	self.loop =0
+	self.et1.join()
+	
+        
     def process_directory(self, parent, path):
         for p in os.listdir(path):
             abspath = os.path.join(path, p)
@@ -288,9 +455,13 @@ class mainclass():
                 self.process_directory(oid, abspath)
 
     def table(self,master):
+        self.botton19 = Button(master, text="RUN", command=lambda:self.run(),height=2,width=15,bg="Skyblue",state=DISABLED)
+        self.botton19.grid(row=1,column=0)
+        self.botton20 = Button(master, text="STOP", command="",height=2,width=15,bg= "Skyblue",state=DISABLED)
+        self.botton20.grid(row=2,column=0)
         style = ttk.Style()
         #style.configure(".", font=('Helvetica', 12))
-        style.configure("Treeview", foreground='red')
+        #style.configure("Treeview", foreground='red')
         style.configure("Treeview.Heading", foreground='Black',background="SkyBlue")
         self.tree2 = ttk.Treeview( master, columns=('KeyStrokes','Ideal Output','Received output','Pass/fail'))
         #self.tree2.heading('#0', text='Main heading')
@@ -317,11 +488,9 @@ class mainclass():
         #self.master.columnconfigure(0,weight=0)
         #scrollbar1.pack(side=RIGHT)
         #self.loadtable1()
-        botton1 = Button(master, text="RUN", command="",height=2,width=15,bg="Skyblue")
-        botton1.grid(row=1,column=0)
-        botton2 = Button(master, text="STOP", command="",height=2,width=15,bg= "Skyblue")
-        botton2.grid(row=2,column=0)
         
+        self.treeview.tag_configure("fail",background="red")
+        self.treeview.tag_configure("pass",background="green")
         #------------------------------------
         #style = ttk.Style()
         #style.configure("Treeview.Heading", font=(None, 10))
@@ -361,11 +530,11 @@ class Record_Testcases:
         #---------------------------------------
    	self.tree2 = ttk.Treeview( master, columns=('Sr. number','Keyword name','keyword'))
    	style.configure("Treeview.Heading", foreground='Black',background="SkyBlue")
-   	self.tree2.heading('#0', text='No.')
+   	self.tree2.heading('#0', text='S No.')
         self.tree2.heading('#1', text='BRF DATA')
         self.tree2.heading('#2', text='Keyboard Event')
-        self.tree2.column('#0',width=280, stretch=False)
-        self.tree2.column('#1',width=280, stretch=False)
+        self.tree2.column('#0',width=50, stretch=False)
+        self.tree2.column('#1',width=600, stretch=False)
         self.tree2.column('#2',width=280, stretch=False)
         self.tree2.grid(row=0,column=1, rowspan=8, sticky='nsew')
         #style.configure("Treeview", foreground='red')
@@ -435,6 +604,7 @@ class Record_Testcases:
         self.root4=Toplevel(self.master)
         label0 = Label(self.root4,text="Please enter the name of menu").grid(row=0,column=0,columnspan=2)
         label1 = Label(self.root4,text="Name").grid(row=1,column=0,sticky=E)
+	self.center(self.root4)
         self.Entry5=Entry(self.root4)
         self.Entry5.grid(row=1,column=1)
         self.root4.grid_rowconfigure(2, minsize=20)
@@ -490,7 +660,22 @@ class Record_Testcases:
         self.root_node = self.tree.insert('', 'end', text="tacread", open=True)
         self.process_directory(self.root_node, abspath)
     
-    
+    def center(self,win):
+	    """
+	    centers a tkinter window
+	    :param win: the root or Toplevel window to center
+	    """
+	    win.update_idletasks()
+	    width = win.winfo_width()
+	    frm_width = win.winfo_rootx() - win.winfo_x()
+	    win_width = width + 2 * frm_width
+	    height = win.winfo_height()
+	    titlebar_height = win.winfo_rooty() - win.winfo_y()
+	    win_height = height + titlebar_height + frm_width
+	    x = win.winfo_screenwidth() // 2 - win_width // 2
+	    y = win.winfo_screenheight() // 2 - win_height // 2
+	    win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+	    win.deiconify()
 	
     def recording1(self):
      if self.Entry6.get() =="":
@@ -519,7 +704,7 @@ class Record_Testcases:
 	self.qu=multiprocessing.Queue()
 	self.stop_but=multiprocessing.Queue()
 	self.rec_error=multiprocessing.Queue()
-	self.qu.put("Recording.....")	#to make sure queue size is not zero initially, make sure line is here only
+	self.qu.put(('',"Recording Started.",''))	#to make sure queue size is not zero initially, make sure line is here only
 	self.rt1=multiprocessing.Process(target=recording,args=(self,path,abc,self.qu,self.stop_but,self.rec_error))
 					#(target=execute,args=(self,abc,self.finalpath4,self.equ1,self.equ2,self.equ3))
         self.rt1.start()
@@ -536,12 +721,27 @@ class Record_Testcases:
     def qu_check(self):
 		#write code to check if credentials are wrong (code might still work without throwing any errors, but won't give any output)
                 p=0
-		
+		#check qsize and empty documentation. qsize gices approx size.
+		#most probably there is no problem in qsize, it works fine
+		print 'chal'
 		while self.qu.qsize()!=0 :
-			if self.rec_error.qsize()!=0:
+			
+			po=self.qu.get()
+		        #self.tree2.insert('',"end",text='',values=('',''))
+                        #print "wer"+p[0]+p[1]+p[2] 
+                        self.tree2.insert('',"end",text=po[0],values=(po[1],po[2]))
+                        self.tree2.update_idletasks()
+                        self.tree2.yview_moveto(1)
+			#self.listbox1.insert(END,self.qu.get())	
+			#self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
+                        #self.listbox1.see(END)
+		
+		print str(self.stop_but.qsize()) +'but_size'
+		if not self.rec_error.empty():
 				#show error
 				print 'Error aagaya'
 				error1=self.rec_error.get()
+				print error1
 				if "'NoneType' object has no attribute 'send'" in error1:
 					tkMessageBox.showinfo('Error.Probably connection not established. Details: ',str(error1),parent=self.master)
 				elif "Broken pipe" in error1:
@@ -549,7 +749,7 @@ class Record_Testcases:
 				else:
 					tkMessageBox.showinfo('Error: ',str(error1),parent=self.master)
 				return		#out of qu_check	
-			if self.stop_but.qsize()!=0:
+		if not self.stop_but.empty():
 				print 'stopped'
                                 tkMessageBox.showinfo('end',"FINISHED RECORDING, TESTCASE GENERATED.",parent=self.master)
 				#self.listbox1.insert(END,"FINISHED RECORDING, TESTCASE GENERATED.")	
@@ -557,16 +757,7 @@ class Record_Testcases:
                         	#self.listbox1.see(END)
                                 p=1
 				return		#out of qu_check
-			po=self.qu.get()
-		        #self.tree2.insert('',"end",text='',values=('',''))
-                        self.tree2.insert('',"end",text='',values=(po[0],po[1]))
-                        self.tree2.update_idletasks()
-			#self.listbox1.insert(END,self.qu.get())	
-			#self.listbox1.update_idletasks() 	#or else listbox is updated only after whole fxn is called
-                        #self.listbox1.see(END)
-		
-		
-                self.master.after(500,self.qu_check)
+                self.master.after(50,self.qu_check)
                 
     def addtestcase(self,master):
         
@@ -607,10 +798,10 @@ class Record_Testcases:
 	
         self.stop_but.put("stopped...")
 	time.sleep(4)
-        print "Recording stopped, processing and generating testcase...."
+        print 'Recording stopped, processing and generating testcase....'
 	
 	self.rt1.join()
-        
+        print "Joined"
     '''def OnDoubleClick(self, event):
         item_iid = self.tree.selection()[0]
         parent_iid = self.tree.parent(item_iid)[0]
