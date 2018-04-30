@@ -2,6 +2,8 @@ Documentation for ARBD testing APP
 
 INTRO:
 After a software update or installation of a new app, the TacRead Devices require manual testing in order to ensure that every app and all it’s features are functioning as expected. But this process could be automated since the testcases to be repeated every time was the same, saving time and increasing efficiency as compared to manual testing. We developed a linux-based app for the same.
+
+
 APP SPECIFICATIONS:
 Records and stores any number of test cases with all the relevant details such as the output, time lag between successive keystrokes.
 Recorded testcases can be run anytime in the future.
@@ -13,6 +15,7 @@ DESCRIPTION OF FUNCTIONING OF THE APP:
 BEFORE RUNNING THE APP:
 Make sure that srbda.py, alclinet.py, alserver.py, connect.py, executer6.py, are all existing in a common directory(dir1). Also if the app is being run for the first time make sure that there is a directory called ‘tacread’(which could be empty or not) inside dir1. If testcases were already recorded it would be found in this tacread directory.
 Also make sure that python-uinput is installed in the arbd .
+
 
 CONNECTING TO THE ARBD
 
@@ -31,6 +34,7 @@ After connection is established, the other buttons, namely RECORD, EXECUTE and D
 DISCONNECTING
 Clicking on Disconnect kills the process running in the ARBD and the connection will be broken.
 If there is any bug during execution of the app, clicking on Disconnect and Connecting again (without having to re-executing srbda.py) usually solves the problem.
+
 
 
 RECORDING TESTCASES
@@ -52,11 +56,13 @@ So to change any keycode definition according to uinput definitions the dictiona
 After recording is finished the window for recording can be closed and other functions such as executing can be done. 
 
 
+
 EXECUTING TESTCASES:
 Click on “Execute” to get to the execution window. Select a testcase from the list on the right, right-click on it and click on “load testcases”. This loads all the BRF data lines and Keyboard event lines as recorded, sequentially.
 Now click on “Execute testcases”, to start execution. 
 NOTE: Before execution make sure that the intial condition in the arbd is same as shown in the loaded testcase. (This could not be done automatically because ,we don’t know the u-input keycode for windows key)
 The program compares the new BRF data lines to the BRF data lines in the recorded testcases. If the line passed, the line turns green and ‘passes’ appears on the table. If the line failed, the line becomes red and ‘failed’ appears on the table. A pop-up appears asking the user to continue execution or not. If the user clicks on “Continue” the execution continues until the whole testcase has been executed or until when a new fail case appears. If the user clicks on “stop”, execution is stopped.
+
 What happens internally:
 The functions for execution are imported by srbda.py from alclient.py.
 During execution the alserver.py program captures the name of the latest logfile in the arbd and reads from it. The lines obtained are used for comparision. Also a uinput device is defined by the alserver program.
