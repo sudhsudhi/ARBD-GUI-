@@ -1,18 +1,24 @@
 Documentation for ARBD testing APP
 
 INTRO:
+
 After a software update or installation of a new app, the TacRead Devices require manual testing in order to ensure that every app and all it’s features are functioning as expected. But this process could be automated since the testcases to be repeated every time was the same, saving time and increasing efficiency as compared to manual testing. We developed a linux-based app for the same.
 
 
 APP SPECIFICATIONS:
+
 Records and stores any number of test cases with all the relevant details such as the output, time lag between successive keystrokes.
 Recorded testcases can be run anytime in the future.
 The app executes each keystroke in the test case, compares
 the output to the expected output in real time.
 If these both are not matching, it asks the user whether to continue execution of the test case or not.
 Suitable GUI, for the tester to run the app.
+
+
 DESCRIPTION OF FUNCTIONING OF THE APP:
+
 BEFORE RUNNING THE APP:
+
 Make sure that srbda.py, alclinet.py, alserver.py, connect.py, executer6.py, are all existing in a common directory(dir1). Also if the app is being run for the first time make sure that there is a directory called ‘tacread’(which could be empty or not) inside dir1. If testcases were already recorded it would be found in this tacread directory.
 Also make sure that python-uinput is installed in the arbd .
 
