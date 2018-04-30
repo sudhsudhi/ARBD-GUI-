@@ -1,2 +1,9 @@
-[sudo] password for ubuntu: pid:5932
+[sudo] password for ubuntu: pid:4328
 waiting....
+connected...
+Traceback (most recent call last):
+  File "/home/ubuntu/alserver.py", line 381, in <module>
+    server(host,port,password)
+  File "/home/ubuntu/alserver.py", line 193, in server
+    c.send('received wut:'+wut)
+socket.error: [Errno 32] Broken pipe

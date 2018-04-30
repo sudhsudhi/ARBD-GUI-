@@ -224,7 +224,8 @@ def wow(equ1,p2):
 			equ1.put(line)
 	
 def recordserver(s,c):
-
+		#Keyboard.emit_combo([uinput.KEY_HP,uinput.KEY_CAMERA])
+		#Keyboard.emit_combo([uinput.KEY_BASSBOOST,uinput.KEY_DASHBOARD,uinput.KEY_PROG3,uinput.KEY_SUSPEND])	#to bring to home  <sp+m(dots134)>	 'd3': 'KEY_PROG3', 'd2': 'KEY_PROG4', 'd7': 'KEY_PAUSECD', 'd5': 'KEY_CLOSE', 'd6': 'KEY_PLAY', 'd1': 'KEY_DASHBOARD', 'd4': 'KEY_SUSPEND', 'rj 'psp': 'KEY_BASSBOOST'
 		#grep might interfer with stout.read so don't use grep		
 
 		cmd1='ls -t /opt/arbd/logs/ | head -1 '
@@ -282,6 +283,7 @@ def exeserver(s,c):
 	#updated latest UI	
 	l = 0
 	tervar=0
+	Keyboard.emit_combo([uinput.KEY_BASSBOOST,uinput.KEY_DASHBOARD,uinput.KEY_PROG3,uinput.KEY_SUSPEND])	#to bring to home  <sp+m(dots134)>	 'd3': 'KEY_PROG3', 'd2': 'KEY_PROG4', 'd7': 'KEY_PAUSECD', 'd5': 'KEY_CLOSE', 'd6': 'KEY_PLAY', 'd1': 'KEY_DASHBOARD', 'd4': 'KEY_SUSPEND', 'rj 'psp': 'KEY_BASSBOOST'
 	while tervar==0:
 		#the latest logfile location is removed in each iteration so that any change in llf can be recorded.
 		cmd1='ls -t /opt/arbd/logs/ | head -1 '
@@ -374,6 +376,6 @@ def exeserver(s,c):
 
 
 host= "192.168.7.2"
-port=2250
+port=3239
 password= ".Book40"
 server(host,port,password)

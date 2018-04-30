@@ -11,6 +11,7 @@ import subprocess
 from executer6 import ex,ex2,di,timeparse,linker,timedifference
 from random import randint
 abc = None
+import xlwt
 #socket can be called by abc
 #take care of wut in record ,execute and disconnect
 #in disconnect make sure the process connect.py in your latop is closed and the created sockets are destroyed.
@@ -277,7 +278,7 @@ class mainclass():
              path =  self.tree1.item(item_iid,'text')
         self.finalpath4 = os.getcwd()+"/"+text1[:-1]
 	#_____________________________
-	
+	self.treeview.delete(*self.treeview.get_children())
 	f= open(self.finalpath4,'r') 
 	ideal_link=f.readlines()[0]
 	#print ideal_link
@@ -334,6 +335,17 @@ class mainclass():
 	
 	self.et1=multiprocessing.Process(target=execute,args=(self,abc,self.finalpath4,self.equ1,self.equ2,self.equ3,self.exe_error))
         self.et1.start()
+	'''
+	book = xlwt.Workbook(encoding="utf-8")
+
+	self.sheet1 = book.add_sheet("Sheet 1")
+
+	self.sheet1.write(1, 0, "Keystroke")
+	self.sheet1.write(1, 1, "Ideal Output")
+	self.sheet1.write(1, 2, "Received Output")
+	self.sheet1.write(1, 3, "Pass/Fail")
+	'''				
+	
 	self.equ_check()
     	
     def equ_check(self):
@@ -359,6 +371,13 @@ class mainclass():
 				else:
 				       self.treeview.item(self.keylists[self.loop],text=p[0],values=(p[1],p[2],p[3]))
                                 #self.treeview.yview_moveto(1)
+				"""
+
+				self.sheet1.write(self.loop+2, 0,p[0])
+				self.sheet1.write(self.loop+2, 1,p[1] )
+				self.sheet1.write(self.loop+2, 2, p[2])
+				self.sheet1.write(self.loop+2, 3, p[3])
+				"""	
                                 self.loop +=1
                                 
 				self.treeview.update_idletasks()     #my line 
@@ -386,6 +405,31 @@ class mainclass():
 				
 								
 				if self.variable=="stop":
+					
+					book = xlwt.Workbook(encoding="utf-8")
+
+					sheet1 = book.add_sheet("Sheet 1")
+
+					sheet1.write(1, 0, "Keystroke")
+					sheet1.write(1, 1, "Ideal Output")
+					sheet1.write(1, 2, "Received Output")
+					sheet1.write(1, 3, "Pass/Fail")
+					
+					ij=3
+                                        for child in self.treeview.get_children():
+                                                       a =  self.treeview.item(child)['text']
+                                                       b =  self.treeview.item(child)["values"]
+                                                       print b
+						       print b[0] +"sudhish"
+                                                       print b[1] +"sonu"
+                                                       print b[2] +"esrty"
+						       sheet1.write(ij, 0, a)
+						       sheet1.write(ij, 1, b[0].rstrip())
+						       sheet1.write(ij, 2, b[1].rstrip())
+						       sheet1.write(ij, 3, b[2].rstrip())
+						       ij+=1	
+					#sheet1.write(ij, 4,'stopped execution  here')	
+					book.save(os.getcwd()+'/'+self.tree1.item(self.item_iid1,'text')+'exec_report'+str(randint(1,100))+".xls")
 					return
 				elif self.variable=="waiting":
 					self.equ3.put('wait')
@@ -409,6 +453,26 @@ class mainclass():
 					self.equ3.put('wait')
 			if equ3v=='finished':
 					
+					book = xlwt.Workbook(encoding="utf-8")
+
+					sheet1 = book.add_sheet("Sheet 1")
+
+					sheet1.write(1, 0, "Keystroke")
+					sheet1.write(1, 1, "Ideal Output")
+					sheet1.write(1, 2, "Received Output")
+					sheet1.write(1, 3, "Pass/Fail")
+					
+					ij=3
+                                        for child in self.treeview.get_children():
+                                                       a =  self.treeview.item(child)['text']
+                                                       b =  self.treeview.item(child)["values"]
+						       
+						       sheet1.write(ij, 0, a)
+						       sheet1.write(ij, 1, b[0].rstrip())
+						       sheet1.write(ij, 2, b[1].rstrip())
+						       sheet1.write(ij, 3, b[2].rstrip())
+						       ij+=1		
+					book.save(os.getcwd()+'/'+self.tree1.item(self.item_iid1,'text')+'exec_report'+str(randint(1,100))+".xls")
 					#self.treeview.insert('',"end",text='',values=('','Finished execution',''))
 					tkMessageBox.showinfo("info","Finished excecution",parent=self.root4)
                                         self.loop=0
@@ -578,7 +642,7 @@ class Record_Testcases:
 	master.popup_menu = Menu(master)
         master.popup_menu.add_command(label="Add Menu",command=lambda:self.addmenu(master))
         master.popup_menu.add_command(label="Add Testcase",command=lambda:self.addtestcase(master))
-        master.popup_menu.add_command(label="Delete",command=lambda:self.delete(master))
+        #master.popup_menu.add_command(label="Delete",command=lambda:self.delete(master))
 
         self.tree.bind("<Button-3>",self.popup)
     def popup(self, event):
@@ -766,17 +830,18 @@ class Record_Testcases:
                 self.master.after(50,self.qu_check)
                 
     def addtestcase(self,master):
-        
+        self.tree2.delete(*self.tree2.get_children())
         self.root5=Toplevel(self.master)
         label0 = Label(self.root5,text="Please enter the name of Testcase").grid(row=0,column=0,columnspan=2)
         label1 = Label(self.root5,text="Name").grid(row=1,column=0,sticky=E)
-	self.center(self.root5)			#sudhi
+				#sudhi
         self.Entry6=Entry(self.root5)
         self.Entry6.grid(row=1,column=1)
         self.root5.grid_rowconfigure(2, minsize=20)
 
 	
         button4 = Button(self.root5, text="Start Recording", command=lambda:self.recording1(),height=1).grid(row=3,column=0,columnspan=2)
+        self.center(self.root5)
         #self.Labelx["text"] = "Enter the name of Testcase"
         #-----------------------------------------------------------------------
         #master.popup_menu.destroy()

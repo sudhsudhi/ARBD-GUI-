@@ -282,9 +282,8 @@ def executep(self,s,testcase_name,equ1,equ2,equ3):
 		sendlist=[]
 		executed=[]
 		brfl=[]
-		
 		b2=0
-	
+		
 		for line in ilink:
 			if "BRF data" in line:
 				brfl.append(line)
@@ -323,6 +322,7 @@ def executep(self,s,testcase_name,equ1,equ2,equ3):
 						tick = True
 						equ1.put(('',sbrf,sbrf,'Passed'))
 						break
+				if len(obrf)==0: sbrf=''
 				if tick is True:
 					print "BRF data: "  + " matched!"
 				else:
